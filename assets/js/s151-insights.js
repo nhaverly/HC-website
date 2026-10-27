@@ -3,6 +3,7 @@
   var root = document.getElementById('insights-data');
   if (!root || !window.Chart) return;
   var base = root.getAttribute('data-base') || '';
+  var dv = '?v=' + (root.getAttribute('data-v') || '');
   var NAVY = '#090F54', TEAL = '#1A8FA6', GRID = 'rgba(9,15,84,0.10)', INK = '#0B090A', MUTED = '#090F54';
   Chart.defaults.font.family = 'Arial, "Helvetica Neue", sans-serif';
   Chart.defaults.font.size = 13;
@@ -11,7 +12,7 @@
   function axes(y) { return { grid: { color: GRID, drawTicks: false }, border: { display: false }, ticks: y || {} }; }
 
   // 1. Audit timeliness
-  fetch(base + 'assets/data/s151-audit.json').then(function (r) { return r.json(); }).then(function (A) {
+  fetch(base + 'assets/data/s151-audit.json' + dv).then(function (r) { return r.json(); }).then(function (A) {
     var s = A.timeliness || [];
     new Chart(document.getElementById('chartAudit'), {
       type: 'bar',
@@ -57,7 +58,7 @@
   });
 
   // 3. Reserves spread by council type
-  fetch(base + 'assets/data/s151-reserves.json').then(function (r) { return r.json(); }).then(function (R) {
+  fetch(base + 'assets/data/s151-reserves.json' + dv).then(function (r) { return r.json(); }).then(function (R) {
     var order = ['SC', 'UA', 'MD', 'LB', 'SD'];
     var narrow = document.getElementById('chartSpread').parentNode.clientWidth < 600;
     var TICKS = narrow ? [1, 10, 100, 800] : [1, 5, 10, 25, 50, 100, 200, 400, 800];

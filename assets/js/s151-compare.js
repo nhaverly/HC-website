@@ -3,6 +3,7 @@
   var root = document.getElementById('cmp');
   if (!root) return;
   var base = root.getAttribute('data-base') || '';
+  var dv = '?v=' + (root.getAttribute('data-v') || '');
   var input = document.getElementById('cmpCouncil');
   var out = document.getElementById('cmpOut');
   var R, A;
@@ -79,8 +80,8 @@
   }
 
   Promise.all([
-    fetch(base + 'assets/data/s151-reserves.json').then(function (r) { return r.json(); }),
-    fetch(base + 'assets/data/s151-audit.json').then(function (r) { return r.json(); }).catch(function () { return null; })
+    fetch(base + 'assets/data/s151-reserves.json' + dv).then(function (r) { return r.json(); }),
+    fetch(base + 'assets/data/s151-audit.json' + dv).then(function (r) { return r.json(); }).catch(function () { return null; })
   ]).then(function (res) {
     R = res[0]; A = res[1];
     var dl = document.getElementById('councilList');

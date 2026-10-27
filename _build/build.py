@@ -20,7 +20,7 @@ from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "21"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "22"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1062,6 +1062,16 @@ def build_pwlb_vs_il():
           + body + footer(pg, scripts))
 
 
+def s151_data_version():
+    """Short hash of the hub's data files, appended to their URLs so browsers fetch new data when it changes."""
+    import hashlib
+    h = hashlib.md5()
+    for n in ("s151-reserves.json", "s151-audit.json"):
+        with open(os.path.join(ROOT, "assets", "data", n), "rb") as f:
+            h.update(f.read())
+    return h.hexdigest()[:10]
+
+
 def s151_insights_html(pg):
     """Data insights charts. Spread statistics are computed from the comparison data at build time."""
     import statistics as st
@@ -1085,7 +1095,7 @@ def s151_insights_html(pg):
     trend_json = e(json.dumps(S151_RESERVES_TREND))
     src = 'rel="noopener"'
     return f"""<section class="block" id="data-insights" style="padding-bottom:0">
-  <div class="wrap" id="insights-data" data-base="{pg.base}" data-trend="{trend_json}">
+  <div class="wrap" id="insights-data" data-base="{pg.base}" data-v="{s151_data_version()}" data-trend="{trend_json}">
     <div class="sec-head">
       <div><p class="eyebrow">Data insights</p><h2>What the numbers show.</h2></div>
       <p class="intro">Our analysis of the official data on council audits and reserves. Hover over or tap a chart for the figures, or open the table beneath it.</p>
@@ -1169,7 +1179,7 @@ def build_s151():
       <div><p class="eyebrow">Compare your council</p><h2>Reserves and audit status, against your peers.</h2></div>
       <p class="intro">Choose an English council to see its reserves against councils of the same type, and the status of its external audits.</p>
     </div>
-    <div id="cmp" data-base="{pg.base}">
+    <div id="cmp" data-base="{pg.base}" data-v="{s151_data_version()}">
       <div class="cmp-pick">
         <div><label for="cmpCouncil">Council</label>
         <input id="cmpCouncil" list="councilList" autocomplete="off" placeholder="Start typing a council name" disabled>
