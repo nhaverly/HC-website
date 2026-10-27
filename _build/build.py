@@ -20,7 +20,7 @@ from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "19"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "20"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1088,7 +1088,7 @@ def build_s151():
     tiles += """<div class="fig">
         <p class="eyebrow">PWLB maturity rates</p>
         <div class="rates-mini" id="pwlbLive" aria-live="polite"><span>Loading today's rates…</span></div>
-        <p>Certainty rate, updated daily from Debt Management Office data.</p>
+        <p>Certainty rate (standard rate less 20 basis points), updated daily from Debt Management Office data.</p>
         <p class="src">As at <span id="pwlbAsOf">today</span>. <a href="https://dmo.gov.uk/responsibilities/local-authority-lending/lending-arrangements" rel="noopener">DMO</a></p>
       </div>"""
     figures = f"""<section class="block" id="figures" style="padding-bottom:0">
