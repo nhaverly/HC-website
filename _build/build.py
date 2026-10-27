@@ -140,6 +140,16 @@ def header(pg, current=""):
 </header>
 """
 
+DIRECTORY_PRIVACY = """<h3 id="directory">Our directory of Section 151 officers</h3>
+    <p>Our <a href="section-151-officers#s151-directory">Section 151 hub</a> includes a directory of the officers who hold the statutory Section 151 (chief finance officer) role at English councils. For each, we publish only their name and job title, the council, and a link to the council's own published document that names them, with its date.</p>
+    <ul>
+      <li><strong>Where the information comes from:</strong> councils' own public documents, such as statements of accounts, council and committee reports, and their websites.</li>
+      <li><strong>Why we publish it:</strong> to provide a public reference resource for the local government finance sector. Our lawful basis is our legitimate interest in doing so. The information relates only to people's public, statutory roles and is already published by their councils.</li>
+      <li><strong>What we do not do:</strong> we do not collect or publish contact details, and we do not use the directory for marketing.</li>
+      <li><strong>How long we keep it:</strong> we review the directory regularly and remove or update an entry when someone leaves the role.</li>
+      <li><strong>Your rights:</strong> if you are listed, you can ask us to correct your entry, or object to it being shown, by emailing us at the address above. We will act on your request promptly.</li>
+    </ul>"""
+
 NO_ANALYTICS_PRIVACY = "<p>We do not use cookies, advertising trackers or analytics on this website. The fonts and code the site needs are served from the site itself.</p>"
 ANALYTICS_PRIVACY = ("<p>We use Cloudflare Web Analytics to understand how many people visit the site, which pages they read and how they found us "
     "(for example, from LinkedIn or a search engine). It does not use cookies, does not track you across other websites and does not "
@@ -862,6 +872,7 @@ def build_privacy():
     </ul>
     <p>Please don't include personal information, or confidential information about your organisation, in your questions. Our lawful basis for operating the assistant is our legitimate interest in providing a useful public information tool. Anthropic and Cloudflare may process this information outside the UK, under their own terms and appropriate safeguards.</p>
 
+    {DIRECTORY_PRIVACY if os.path.exists(os.path.join(ROOT, "assets", "data", "s151-directory.json")) else ""}
     <h3>When you browse the site</h3>
     <p>This website is hosted by GitHub Pages. Like most web hosts, GitHub may record visitors' IP addresses in its server logs for security and operational purposes. The PWLB comparison tool loads daily reference rates from GitHub, which may also see your IP address.</p>
     {ANALYTICS_PRIVACY if SITE.get("cf_analytics_token") else NO_ANALYTICS_PRIVACY}
@@ -1072,6 +1083,37 @@ def s151_data_version():
     return h.hexdigest()[:10]
 
 
+def s151_directory_html(pg):
+    """Directory of S151 officers, from assets/data/s151-directory.json (built from councils' own sources)."""
+    path = os.path.join(ROOT, "assets", "data", "s151-directory.json")
+    mail = f'<a href="mailto:{SITE["email"]}">{SITE["email"]}</a>'
+    if not os.path.exists(path):
+        intro = ("<p>We are compiling a directory of Section 151 officers across English councils, showing each officer's name "
+                 "and role as published by their own council, with a link to that source. It will be published here shortly.</p>")
+        return "", intro
+    with open(path, encoding="utf-8") as f:
+        D = json.load(f)
+    n = sum(1 for x in D["entries"] if x.get("name"))
+    intro = (f'<p>Our <a href="#s151-directory">directory</a> lists the Section 151 officer at {n} English councils, '
+             "each taken from the council's own published sources and linked to them.</p>")
+    html = f"""<section class="block" id="s151-directory" style="padding-bottom:0">
+  <div class="wrap" id="dir" data-base="{pg.base}" data-v="{s151_data_version()}">
+    <div class="sec-head">
+      <div><p class="eyebrow">Directory</p><h2>Section 151 officers in England.</h2></div>
+      <p class="intro">Each council's Section 151 officer as named in its own published documents, usually its 2025/26 statement of accounts, with a link to the source and its date.</p>
+    </div>
+    <div class="dir-tools">
+      <div><label for="dirSearch">Search</label><input id="dirSearch" type="search" placeholder="Council or name" autocomplete="off"></div>
+      <div><label for="dirType">Type of council</label><select id="dirType"><option value="">All councils</option></select></div>
+      <p class="dir-count" id="dirCount" aria-live="polite"></p>
+    </div>
+    <div class="table-wrap"><table class="rates dir-t"><thead><tr><th scope="col">Council</th><th scope="col">Section 151 officer</th><th scope="col">Source</th></tr></thead><tbody id="dirBody"><tr><td colspan="3">Loading…</td></tr></tbody></table></div>
+    <p class="note">Names and job titles only, as published by each council; we do not hold or publish contact details. Last checked {e(D.get("checked", ""))}. If you are listed and would like your entry corrected or removed, or you know of a change, email {mail}. See our <a href="{pg.href('privacy')}#directory">privacy notice</a>.</p>
+  </div>
+</section>"""
+    return html, intro
+
+
 def s151_insights_html(pg):
     """Data insights charts. Spread statistics are computed from the comparison data at build time."""
     import statistics as st
@@ -1158,6 +1200,7 @@ def build_s151():
         <p class="src">As at <span id="pwlbAsOf">today</span>. <a href="https://dmo.gov.uk/responsibilities/local-authority-lending/lending-arrangements" rel="noopener">DMO</a></p>
       </div>"""
     insights = s151_insights_html(pg)
+    directory, S151_DIR_INTRO = s151_directory_html(pg)
     figures = f"""<section class="block" id="figures" style="padding-bottom:0">
   <div class="wrap">
     <div class="sec-head">
@@ -1218,8 +1261,7 @@ def build_s151():
     <p>The primary sources Section 151 officers refer to most often.</p>{lib}
 
     <h2 id="directory">Directory of Section 151 officers</h2>
-    <p>We are compiling a directory of Section 151 officers across UK councils. It will show each officer's name and role as published by their own council, with a link to that source and the date we last checked it. It will not include personal contact details. Alongside it, we will publish a monthly round-up of new Section 151 appointments and moves.</p>
-    <p>It will be published here shortly. If you are a Section 151 officer and would like your entry corrected or left out, email <a href="mailto:{SITE['email']}">{SITE['email']}</a>.</p>
+    {S151_DIR_INTRO}
 
     <p class="note">Spotted something out of date? Please <a href="mailto:{SITE['email']}">let us know</a>. This page is general information, not legal or financial advice.</p>
   </article>
@@ -1237,6 +1279,7 @@ def build_s151():
     </div>
   </aside>
 </div>
+{directory}
 <section class="block" id="tools" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head">
@@ -1261,7 +1304,7 @@ def build_s151():
 """
     write(pg, head(pg, "Resources for Section 151 Officers",
                    "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
-                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n<script src="{pg.base}assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>\n<script src="{pg.asset("js/s151-insights.js")}" defer></script>\n'))
+                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n<script src="{pg.base}assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>\n<script src="{pg.asset("js/s151-insights.js")}" defer></script>\n<script src="{pg.asset("js/s151-directory.js")}" defer></script>\n'))
 
 
 def build_404():

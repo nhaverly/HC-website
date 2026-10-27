@@ -495,3 +495,19 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}body{line-height:1.75}h1,h2
 .ins-key .ki{display:inline-flex;align-items:center;gap:6px}.ins-key .k1,.ins-key .k2{display:inline-block;width:12px;height:12px;border-radius:2px}
 .ins-key .k1{background:#090F54}.ins-key .k2{background:#1A8FA6}
 @media (max-width:900px){.ins-grid{grid-template-columns:1fr}}
+
+/* ---------- Section 151 hub: directory ---------- */
+.dir-tools{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:end;margin-bottom:16px}
+.dir-tools label{display:block;font-weight:600;margin-bottom:6px}
+.dir-tools input,.dir-tools select{font:inherit;padding:10px 12px;border:1px solid var(--navy);background:var(--white);color:var(--ink);min-width:min(320px,100%)}
+.dir-count{font-size:.9rem;color:var(--muted);margin-left:auto}
+.dir-t{min-width:0;font-family:var(--f-body);font-size:.92rem}
+.dir-t td,.dir-t th{text-align:left;white-space:normal;vertical-align:top;padding:10px 12px}
+.dir-t a{color:var(--civic);text-underline-offset:3px}
+.dir-role{color:var(--muted);font-size:.85rem}
+.dir-tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--navy);padding:1px 6px;margin-left:4px;color:var(--navy)}
+#s151-directory .table-wrap{max-height:640px;overflow:auto;border:1px solid var(--rule)}
+#s151-directory thead th{position:sticky;top:0;background:var(--white)}
+@media (max-width:600px){.dir-t td:nth-child(3),.dir-t th:nth-child(3){display:none}.dir-count{margin-left:0}}
+.dir-src-m{display:none;margin-top:6px;font-size:.85rem}
+@media (max-width:600px){.dir-src-m{display:block}}
