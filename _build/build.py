@@ -1089,7 +1089,8 @@ if __name__ == "__main__":
     build_404()
     build_sitemap()
     from og import render_cards
-    n = render_cards(OG_CARDS)
+    import content as _c
+    n = render_cards(OG_CARDS, google={p_["slug"] for p_ in _c.POSTS})
     import content as _content
     from capability import build_capability
     pdf = build_capability(_content)
