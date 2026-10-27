@@ -137,6 +137,24 @@ def header(pg, current=""):
 </header>
 """
 
+NO_ANALYTICS_PRIVACY = "<p>We do not use cookies, advertising trackers or analytics on this website. The fonts and code the site needs are served from the site itself.</p>"
+ANALYTICS_PRIVACY = ("<p>We use Cloudflare Web Analytics to understand how many people visit the site, which pages they read and how they found us "
+    "(for example, from LinkedIn or a search engine). It does not use cookies, does not track you across other websites and does not "
+    "identify individual visitors. Cloudflare processes this information on our behalf and may do so outside the UK, under its own terms "
+    "and appropriate safeguards. Our lawful basis is our legitimate interest in understanding and improving how the site is used.</p>\n"
+    "    <p>We do not use cookies or advertising trackers on this website. Apart from the analytics script, the fonts and code the site needs "
+    "are served from the site itself.</p>")
+
+
+def analytics():
+    """Cloudflare Web Analytics beacon (cookieless). Only added once a token is set."""
+    tok = SITE.get("cf_analytics_token")
+    if not tok:
+        return ""
+    return ("<script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
+            f"data-cf-beacon='{{\"token\": \"{e(tok)}\"}}'></script>\n")
+
+
 def hra_widget(pg):
     """Site-wide HRA Assistant pop-up (inline on the assistant page)."""
     if not SITE.get("hra_endpoint"):
@@ -196,7 +214,7 @@ def footer(pg, scripts=""):
   </div>
 </footer>
 <script src="{pg.asset('js/site.js')}" defer></script>
-{scripts}{hra_widget(pg)}</body>
+{scripts}{hra_widget(pg)}{analytics()}</body>
 </html>
 """
 
@@ -840,7 +858,7 @@ def build_privacy():
 
     <h3>When you browse the site</h3>
     <p>This website is hosted by GitHub Pages. Like most web hosts, GitHub may record visitors' IP addresses in its server logs for security and operational purposes. The PWLB comparison tool loads daily reference rates from GitHub, which may also see your IP address.</p>
-    <p>We do not use cookies, advertising trackers or analytics on this website. The fonts and code the site needs are served from the site itself.</p>
+    {ANALYTICS_PRIVACY if SITE.get("cf_analytics_token") else NO_ANALYTICS_PRIVACY}
 
     <h2>How long we keep your information</h2>
     <p>We keep enquiry details for as long as we need them to respond and follow up. If we go on to work together, we keep relevant records for the duration of that relationship and for up to six years afterwards, to meet legal and accounting requirements. If we don't work together, we delete enquiry details within two years.</p>
