@@ -11,7 +11,7 @@ SITE = {
     "email": "info@haverlyconsulting.co.uk",
     "phone": "020 8064 1937",
     "phone_intl": "+442080641937",
-    "address": ["7 Bell Yard", "London", "WC2A 2JR"],
+    "address": ["167-169 Great Portland Street", "5th Floor", "London", "W1W 5PF"],
     "linkedin": "https://www.linkedin.com/in/nick-haverly",
     # Formspree form ID for the contact form (looks like "xyzabcde"). Leave as is until you have one.
     "formspree_id": "mljjevkn",
