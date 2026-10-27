@@ -16,34 +16,35 @@ OUT = os.path.join(ROOT, "assets", "og")
 FONTS = os.path.join(HERE, "fonts")
 
 TEMPLATE = """<!doctype html><html><head><meta charset="utf-8"><style>
-@font-face{font-family:Archivo;src:url("file://%(fonts)s/archivo.ttf");font-weight:100 900;font-stretch:62%% 125%%}
-@font-face{font-family:Plex;src:url("file://%(fonts)s/plex.ttf");font-weight:100 700}
-@font-face{font-family:PlexMono;src:url("file://%(fonts)s/plexmono.ttf")}
+@font-face{font-family:Serif;src:url("file://%(fonts)s/serif.woff2")}
+@font-face{font-family:Sans;src:url("file://%(fonts)s/sans.ttf")}
+@font-face{font-family:Sans;font-weight:700;src:url("file://%(fonts)s/sans-bold.ttf")}
 *{box-sizing:border-box;margin:0}
 html,body{width:1200px;height:630px;overflow:hidden}
-body{background:#0B2C34;color:#E8EFF1;font-family:Plex,sans-serif;position:relative}
-.grid{position:absolute;inset:0;background-image:linear-gradient(#24505A 1px,transparent 1px),linear-gradient(90deg,#24505A 1px,transparent 1px);
- background-size:56px 28px;opacity:.45;-webkit-mask-image:linear-gradient(100deg,transparent 40%%,#000 90%%)}
-.wrap{position:absolute;inset:0;padding:56px 72px 0;display:flex;flex-direction:column}
-.logo{background:#fff;border-radius:4px;padding:10px 14px;align-self:flex-start;display:flex}
-.logo svg{height:64px;width:auto}
-.eyebrow{font-family:PlexMono,monospace;font-size:22px;letter-spacing:.12em;text-transform:uppercase;color:#E1A548;margin-top:44px}
-h1{font-family:Archivo,sans-serif;font-weight:800;font-stretch:82%%;line-height:1.04;letter-spacing:-.01em;margin-top:16px;max-width:1020px}
-.by{font-size:26px;color:#A3B8BE;margin-top:20px;max-width:980px;line-height:1.35}
-.foot{position:absolute;left:0;right:0;bottom:0;height:64px;background:#103842;display:flex;align-items:center;justify-content:space-between;padding:0 72px;
- font-family:PlexMono,monospace;font-size:20px;letter-spacing:.06em;color:#A3B8BE;border-top:4px solid #E1A548}
-.foot b{color:#E8EFF1;font-weight:400}
-</style></head><body><div class="grid"></div><div class="wrap">
+body{background:#FFFFFF;color:#0B090A;font-family:Sans,Arial,sans-serif;position:relative}
+.side{position:absolute;top:0;right:0;bottom:0;width:250px;background:#090F54;border-top:8px solid #1DB6D0;display:flex;align-items:center;justify-content:center}
+.side svg{width:96px;height:auto}
+.wrap{position:absolute;top:0;left:0;bottom:0;right:250px;padding:56px 64px 0 72px;display:flex;flex-direction:column}
+.logo svg{height:74px;width:auto}
+.eyebrow{display:flex;align-items:center;gap:16px;font-size:19px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#090F54;margin-top:52px}
+.eyebrow i{display:inline-block;width:40px;height:4px;background:#1DB6D0}
+h1{font-family:Serif,Georgia,serif;font-weight:400;color:#090F54;line-height:1.08;letter-spacing:-.035em;margin-top:22px;max-width:820px}
+.by{font-size:24px;color:#0B090A;margin-top:22px;max-width:780px;line-height:1.45}
+.foot{position:absolute;left:72px;right:314px;bottom:44px;display:flex;justify-content:space-between;font-size:18px;color:#090F54;border-top:1px solid rgba(9,15,84,.16);padding-top:18px}
+.foot b{font-weight:700}
+</style></head><body>
+<div class="side"><svg viewBox="0 0 92 96" aria-hidden="true"><path d="M0 0h21v96H0zM71 0h21v96H71z" fill="#FFFFFF"/><path d="M35 0h21v38H35zM35 54h21v42H35z" fill="#1DB6D0"/></svg></div>
+<div class="wrap">
 <div class="logo">%(logo)s</div>
-<p class="eyebrow">%(eyebrow)s</p>
+<p class="eyebrow"><i></i>%(eyebrow)s</p>
 <h1 id="t">%(title)s</h1>
 %(byline)s
 </div>
-<div class="foot"><b>haverlyconsulting.co.uk</b><span>Housing finance for local government</span></div>
+<div class="foot"><b>haverlyconsulting.co.uk</b><span>Financial clarity. Better housing.</span></div>
 <script>
-const t=document.getElementById('t');let size=78;t.style.fontSize=size+'px';
-const by=document.querySelector('.by');const limit=by?250:330;
-while(t.scrollHeight>limit&&size>40){size-=2;t.style.fontSize=size+'px';}
+const t=document.getElementById('t');let size=68;t.style.fontSize=size+'px';
+const by=document.querySelector('.by');const limit=by?220:300;
+while(t.scrollHeight>limit&&size>36){size-=2;t.style.fontSize=size+'px';}
 </script></body></html>"""
 
 

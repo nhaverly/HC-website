@@ -15,7 +15,7 @@
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.drop.open').forEach(function (d) { d.classList.remove('open'); });
+      document.querySelectorAll('.drop.open').forEach(function (d) { d.classList.remove('open'); var b = d.querySelector('button'); b.setAttribute('aria-expanded', 'false'); b.focus(); });
       var m = document.querySelector('.menu[open]'); if (m) m.removeAttribute('open');
     }
   });

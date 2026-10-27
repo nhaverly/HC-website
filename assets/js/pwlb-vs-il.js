@@ -108,7 +108,7 @@
     if (chart) chart.destroy();
     chart = new Chart($('paymentChart').getContext('2d'), {
       type: 'line',
-      data: { labels: years, datasets: options.map(function (o) { return { label: o.label, data: o.cf, borderColor: o.color, backgroundColor: o.color, borderWidth: 2, pointRadius: 0, tension: 0.15 }; }) },
+      data: { labels: years, datasets: options.map(function (o) { return { label: o.label, data: o.cf, borderColor: o.color, backgroundColor: o.color, borderWidth: 2, borderDash: o.key === 'pp' ? [7, 5] : [], pointRadius: 0, tension: 0.15 }; }) },
       options: {
         responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
         plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, color: tick, font: { size: 11 } } },

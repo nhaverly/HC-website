@@ -13,12 +13,12 @@ import sys
 from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
-from content import (SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
+from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
                      SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "16"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "17"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -63,7 +63,7 @@ def og_image(pg, title, eyebrow, byline):
 
 
 def head(pg, title, desc, extra="", og_type="website", noindex=False,
-         og_title=None, og_eyebrow="Housing finance advisory", og_byline=""):
+         og_title=None, og_eyebrow="Housing finance advisory", og_byline="", body_class=""):
     full_title = title if title.endswith(SITE["name"]) else f"{title} | {SITE['name']}"
     robots = '<meta name="robots" content="noindex">\n' if noindex else ""
     card_title = og_title or re.sub(r"\s*\|\s*" + re.escape(SITE["name"]) + r"$", "", full_title)
@@ -85,37 +85,39 @@ def head(pg, title, desc, extra="", og_type="website", noindex=False,
 <meta property="og:url" content="{pg.url}">
 <meta property="og:site_name" content="{SITE['name']}">
 {og_img}<meta name="twitter:card" content="{'summary_large_image' if img else 'summary'}">
-<meta name="theme-color" content="#0B2C34">
+<meta name="theme-color" content="#090F54">
 <link rel="icon" href="{pg.base}assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="{pg.base}assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="{pg.base}assets/fonts/plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{pg.asset('css/site.css')}">
 {extra}</head>
-<body>
+<body{f' class="{body_class}"' if body_class else ''}>
 <a class="skip" href="#main">Skip to content</a>
 """
 
 
 def header(pg, current=""):
-    def cur(key):
-        return ' aria-current="page"' if key == current else ""
+    here = pg.path[:-5]
+
+    def cur(slug, key=None):
+        """aria-current for the page itself, or for its section in the main nav."""
+        return ' aria-current="page"' if slug == here or (key and key == current) else ""
     svc_links = "".join(
-        f'<a href="{pg.href(s["slug"])}">{e(s["name"])}</a>' for s in SERVICES)
+        f'<a{cur(s["slug"])} href="{pg.href(s["slug"])}">{e(s["name"])}</a>' for s in SERVICES)
     mobile_svcs = "".join(
-        f'<a class="sub" href="{pg.href(s["slug"])}">{e(s["name"])}</a>' for s in SERVICES)
+        f'<a{cur(s["slug"])} class="sub" href="{pg.href(s["slug"])}">{e(s["name"])}</a>' for s in SERVICES)
+    svc_btn = ' aria-current="page"' if current == "services" else ""
     return f"""<header class="site-head">
   <div class="wrap">
-    <a class="brand logo" href="{pg.href('')}" aria-label="Haverly Consulting home"><img src="{pg.base}assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"></a>
+    <a class="brand logo" href="{pg.href('')}" aria-label="Haverly Consulting home"><img src="{pg.base}assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"><span class="brand-label">CONSULTING</span></a>
     <nav class="nav" aria-label="Main">
       <div class="drop">
-        <button type="button" aria-expanded="false" aria-haspopup="true"{cur('services')}>Services</button>
+        <button type="button" aria-expanded="false" aria-haspopup="true"{svc_btn}>Services</button>
         <div class="drop-panel">{svc_links}</div>
       </div>
-      <a href="{pg.href('case-studies')}"{cur('cases')}>Case studies</a>
-      <a href="{pg.href('blog')}"{cur('blog')}>Insights</a>
-      <a href="{pg.href('our-team')}"{cur('team')}>Team</a>
-      <a href="{pg.href('useful-tools')}"{cur('tools')}>Tools</a>
-      <a class="btn btn-brass" href="{pg.href('contact')}">Book a consultation</a>
+      <a{cur('case-studies', 'cases')} href="{pg.href('case-studies')}">Case studies</a>
+      <a{cur('blog', 'blog')} href="{pg.href('blog')}">Insights</a>
+      <a{cur('our-team', 'team')} href="{pg.href('our-team')}">Team</a>
+      <a{cur('useful-tools', 'tools')} href="{pg.href('useful-tools')}">Tools</a>
+      <a{cur('contact')} class="btn btn-brass" href="{pg.href('contact')}">Book a consultation</a>
     </nav>
     <details class="menu">
       <summary>Menu</summary>
@@ -123,17 +125,25 @@ def header(pg, current=""):
         <p>Services</p>
         {mobile_svcs}
         <p>Company</p>
-        <a href="{pg.href('case-studies')}">Case studies</a>
-        <a href="{pg.href('blog')}">Insights</a>
-        <a href="{pg.href('our-team')}">Team</a>
-        <a href="{pg.href('testimonials')}">Testimonials</a>
-        <a href="{pg.href('useful-tools')}">Tools</a>
-        <a href="{pg.href('contact')}">Contact</a>
+        <a{cur('case-studies')} href="{pg.href('case-studies')}">Case studies</a>
+        <a{cur('blog')} href="{pg.href('blog')}">Insights</a>
+        <a{cur('our-team')} href="{pg.href('our-team')}">Team</a>
+        <a{cur('testimonials')} href="{pg.href('testimonials')}">Testimonials</a>
+        <a{cur('useful-tools')} href="{pg.href('useful-tools')}">Tools</a>
+        <a{cur('contact')} href="{pg.href('contact')}">Contact</a>
       </div>
     </details>
   </div>
 </header>
 """
+
+def hra_widget(pg):
+    """Site-wide HRA Assistant pop-up (inline on the assistant page)."""
+    if not SITE.get("hra_endpoint"):
+        return ""
+    root = pg.base or "./"
+    return (f'<script src="{pg.asset("js/hra-widget.js")}" data-endpoint="{e(SITE["hra_endpoint"])}" '
+            f'data-site-root="{root}" defer></script>\n')
 
 
 def contact_band(pg, heading="Talk to a housing finance specialist",
@@ -163,7 +173,7 @@ def footer(pg, scripts=""):
     return f"""<footer class="site-foot">
   <div class="wrap cols">
     <div>
-      <a class="brand logo" href="{pg.href('')}" aria-label="Haverly Consulting home"><img src="{pg.base}assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"></a>
+      <a class="brand logo" href="{pg.href('')}" aria-label="Haverly Consulting home"><img src="{pg.base}assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"><span class="brand-label">CONSULTING</span></a>
       <p>Independent housing finance advisory for UK local authorities and the affordable housing sector.</p>
     </div>
     <div><h2>Services</h2><ul>{svc}</ul></div>
@@ -186,18 +196,18 @@ def footer(pg, scripts=""):
   </div>
 </footer>
 <script src="{pg.asset('js/site.js')}" defer></script>
-{scripts}</body>
+{scripts}{hra_widget(pg)}</body>
 </html>
 """
 
 
-def page_hero(pg, crumbs, h1, lede="", eyebrow="", meta=""):
+def page_hero(pg, crumbs, h1, lede="", eyebrow="", meta="", crumb=None):
     trail = " / ".join([f'<a href="{pg.href(href)}">{e(t)}</a>' for t, href in crumbs])
     eb = f'<p class="eyebrow" style="margin-top:18px">{e(eyebrow)}</p>' if eyebrow else ""
     ld = f'<p class="lede">{e(lede)}</p>' if lede else ""
     return f"""<section class="page-hero">
   <div class="wrap">
-    <p class="crumbs">{trail} / <span>{e(h1 if len(h1) < 40 else 'Article')}</span></p>
+    <p class="crumbs">{trail} / <span>{e(crumb or (h1 if len(h1) < 40 else 'Article'))}</span></p>
     {eb}<h1>{e(h1)}</h1>
     {ld}{meta}
   </div>
@@ -255,11 +265,12 @@ def redirect(path, target_slug):
 
 
 # ------------------------------------------------------------------ components
-def services_grid(pg):
+def services_grid(pg, arrows=False):
+    arrow = '\n          <span class="service-arrow" aria-hidden="true">↗</span>' if arrows else ""
     return "".join(f"""<a class="svc" href="{pg.href(s['slug'])}">
           <h3>{e(s['name'])}</h3>
           <p>{e(s['blurb'])}</p>
-          <span class="tags">{e(s['tags'])}</span>
+          <span class="tags">{e(s['tags'])}</span>{arrow}
         </a>""" for s in SERVICES)
 
 
@@ -319,45 +330,64 @@ def build_home():
            "address": {"@type": "PostalAddress", "streetAddress": ", ".join(SITE["address"][:-2]), "addressLocality": SITE["address"][-2],
                        "postalCode": SITE["address"][-1], "addressCountry": "GB"},
            "areaServed": "GB", "founder": {"@type": "Person", "name": "Nick Haverly", "jobTitle": "Director", "sameAs": [SITE["linkedin"]]}}
-    practice = "".join(
-        f'<li><div><b>{e(t)}</b><span>{e(d)}</span></div></li>' for t, d, _slug in PRACTICE)
     clients = "".join(f"<li>{e(c)}</li>" for c in CLIENTS)
+    focus = "".join(
+        f'<li><a href="{pg.href(slug)}"><span>{i:02d}</span> {e(label)} <b aria-hidden="true">↗</b></a></li>'
+        for i, (label, slug) in enumerate(HOME_FOCUS, 1))
     body = f"""{header(pg)}
 <main id="main">
   <section class="hero">
-    <div class="wrap">
-      <div>
-        <p class="eyebrow">Housing finance advisory for local government</p>
-        <h1>Complex housing challenges. <em>Clear financial solutions.</em></h1>
-        <p class="lede">Independent strategic and financial advice for local authorities and the affordable housing sector. We structure funding, test viability and stabilise budgets so councils can deliver more homes with less risk.</p>
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="brand-rule"></span> Independent housing finance specialists</p>
+        <h1>Financial clarity.<br><em>Better housing.</em></h1>
+        <p class="lede">Practical, independent advice for local authorities and the affordable housing sector. We help you structure funding, test viability and make confident financial decisions.</p>
         <div class="ctas">
-          <a class="btn btn-brass" href="{pg.href('contact')}">Book a free 30-minute consultation</a>
-          <a class="btn btn-ghost" href="#results">See recent transactions</a>
+          <a class="btn btn-civic" href="{pg.href('contact')}">Book a free consultation <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="{pg.href('case-studies')}">Explore our work <span aria-hidden="true">→</span></a>
         </div>
+        <p class="hero-caption">Strategic advice. Experienced practitioners. Lasting impact.</p>
       </div>
-      <div class="practice">
-        <p class="eyebrow">Areas of practice</p>
-        <ul>{practice}</ul>
-      </div>
+      <aside class="hero-focus" aria-labelledby="focus-title">
+        <div class="focus-top">
+          <p class="eyebrow">Our focus</p>
+          <svg class="brand-mark" viewBox="0 0 92 96" aria-hidden="true"><path d="M0 0h21v96H0zM71 0h21v96H71z" fill="#FFFFFF"/><path d="M35 0h21v38H35zM35 54h21v42H35z" fill="#1DB6D0"/></svg>
+        </div>
+        <h2 id="focus-title">Complex challenges.<br>Clear direction.</h2>
+        <ul class="focus-list">{focus}</ul>
+        <p class="focus-foot">Specialist support, from strategy to delivery.</p>
+      </aside>
     </div>
   </section>
 
-  <div class="cred">
+  <div class="clients" aria-label="Selected clients">
     <div class="wrap">
-      <span><b>CCAB</b> qualified leadership</span>
-      <span>Former member, Cabinet Office <b>One Public Estate</b> Pool of Experts</span>
-      <span><b>70+ years</b> combined public sector experience</span>
+      <p class="eyebrow">Selected clients</p>
+      <ul>{clients}</ul>
     </div>
   </div>
+
+  <section class="block" id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <p class="eyebrow">Services</p>
+          <h2>Expertise where it matters.</h2>
+        </div>
+        <p class="intro">From an annual advisory subscription to a single independent appraisal, every engagement is led by practitioners who have run council finance functions themselves.</p>
+      </div>
+      <div class="services">{services_grid(pg, arrows=True)}</div>
+    </div>
+  </section>
 
   <section class="block" id="results">
     <div class="wrap">
       <div class="sec-head">
         <div>
           <p class="eyebrow">Recent transactions</p>
-          <h2>Turning temporary accommodation risk into owned supply</h2>
+          <h2>Advice that moves housing forward.</h2>
         </div>
-        <p class="intro">Two funding structures for Westminster City Council's temporary accommodation portfolio, each drawing on a different pool of long-term, index-linked capital.</p>
+        <p class="intro">Two funding structures for Westminster City Council’s temporary accommodation portfolio, drawing on different pools of long-term capital.</p>
       </div>
       <div class="deals">
         <article class="tomb">
@@ -380,7 +410,7 @@ def build_home():
             <dt>Portfolio</dt><dd>124 properties via a council-owned LLP</dd>
             <dt>Outcome</dt><dd>Receipt reinvested in new TA supply; Council retains full use under the leaseback</dd>
           </dl>
-          <div class="foot"><span>Led by Nick Haverly</span><a class="link" href="{pg.href(POSTS[0]['slug'])}">Read the case</a></div>
+          <div class="foot"><span>Led by Nick Haverly</span><a class="link" href="{pg.href('westminster-city-council-pension-fund-50m-sale-and-leaseback-frees-up-capital-for-new-temporary-accommodation')}">Read the case</a></div>
         </article>
       </div>
       <figure class="pull">
@@ -390,29 +420,17 @@ def build_home():
     </div>
   </section>
 
-  {engagements_html(pg)}
-
-  <div class="clients" aria-label="Selected clients">
-    <div class="wrap">
-      <p class="eyebrow">Selected clients</p>
-      <ul>{clients}</ul>
-    </div>
-  </div>
-
   {about_nick_html(pg)}
 
-  {frameworks_html(pg)}
-
-  <section class="block" id="services">
+  <section class="block tools-band" id="tools">
     <div class="wrap">
       <div class="sec-head">
         <div>
-          <p class="eyebrow">Services</p>
-          <h2>Specialist support across the housing finance cycle</h2>
+          <p class="eyebrow">Free tools</p>
+          <h2>A practical head start.</h2>
         </div>
-        <p class="intro">From an annual advisory subscription to a single independent appraisal, every engagement is led by practitioners who have run council finance functions themselves.</p>
       </div>
-      <div class="services">{services_grid(pg)}</div>
+      {tools_html(pg, open_hra=True)}
     </div>
   </section>
 
@@ -421,11 +439,11 @@ def build_home():
       <div class="sec-head">
         <div>
           <p class="eyebrow">Client feedback</p>
-          <h2>Trusted by the people who sign off the numbers</h2>
+          <h2>Trusted by the teams we work with.</h2>
         </div>
         <p class="intro"><a class="link" href="{pg.href('testimonials')}">All testimonials</a></p>
       </div>
-      <div class="quotes">{''.join(quote_fig(t) for t in TESTIMONIALS[:3])}</div>
+      <div class="quotes featured-quote">{quote_fig(TESTIMONIALS[0])}</div>
     </div>
   </section>
 
@@ -434,7 +452,7 @@ def build_home():
       <div class="sec-head">
         <div>
           <p class="eyebrow">Insights</p>
-          <h2>Commentary from the front line of housing finance</h2>
+          <h2>Perspectives on housing finance.</h2>
         </div>
         <p class="intro"><a class="link" href="{pg.href('blog')}">All articles</a></p>
       </div>
@@ -442,26 +460,17 @@ def build_home():
     </div>
   </section>
 
-  <section class="block alt" id="tools">
-    <div class="wrap">
-      <div class="sec-head">
-        <div>
-          <p class="eyebrow">Free tools</p>
-          <h2>Borrowing calculators for treasury teams</h2>
-        </div>
-      </div>
-      {tools_html(pg)}
-    </div>
-  </section>
+  {frameworks_html(pg)}
 
   {contact_band(pg)}
 </main>
 """
     write(pg, head(pg, "Housing Finance Consultancy for Local Authorities | Haverly Consulting",
                    "Specialist housing finance consultants supporting UK local authorities with HRA, temporary accommodation, financial appraisals, business partnering and advisory services.",
-                   extra=ld(org), og_title="Complex housing challenges. Clear financial solutions.",
-                   og_eyebrow="Housing finance advisory for local government",
-                   og_byline="Independent strategic and financial advice for local authorities") + body + footer(pg))
+                   extra=ld(org), og_title="Financial clarity. Better housing.",
+                   og_eyebrow="Independent housing finance specialists",
+                   og_byline="Practical, independent advice for local authorities and the affordable housing sector",
+                   body_class="home") + body + footer(pg))
 
 
 def frameworks_html(pg):
@@ -479,10 +488,11 @@ def frameworks_html(pg):
   </section>"""
 
 
-def tools_html(pg):
+def tools_html(pg, open_hra=False):
     hra = ""
     if SITE.get("hra_endpoint"):
-        hra = f"""<a class="tool" href="{pg.href('hra-assistant')}">
+        trigger = " data-open-hra" if open_hra else ""
+        hra = f"""<a class="tool"{trigger} href="{pg.href('hra-assistant')}">
           <span class="glyph">HRA</span>
           <div><h3>HRA Assistant</h3><p>Ask questions about the Housing Revenue Account in England and get answers drawn from our HRA knowledge base, with sources.</p></div>
         </a>
@@ -557,7 +567,7 @@ def build_team():
     for p in TEAM:
         bio = "".join(f"<p>{e(x)}</p>" for x in p["bio"])
         people += f"""<article class="person" id="{p['id']}">
-        <div class="portrait" aria-hidden="true">{p['initials']}<img src="{pg.base}assets/img/team/{p['id']}.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
+        <div class="portrait" aria-hidden="true"><img src="{pg.base}assets/img/team/{p['id']}.jpg" alt="" loading="lazy" onerror="this.remove()"></div>
         <div>
           <h2>{e(p['name'])}</h2>
           <p class="role">{e(p['role'])}</p>
@@ -710,14 +720,6 @@ def build_tools():
                    "Free PWLB calculators for local authorities: early repayment premium and discount, and an NPV comparison of PWLB and index-linked borrowing.", og_eyebrow="Free tool") + body + footer(pg))
 
 
-HRA_STARTERS = [
-    "How much can council rents rise in 2027/28?",
-    "Can councils keep all their Right to Buy receipts?",
-    "Can we charge our homelessness team to the HRA?",
-    "How should garages be accounted for in the HRA?",
-]
-
-
 def engagements_html(pg):
     cards = "".join(f"""<a class="eng" href="{pg.href('case-studies')}#{c['id']}">
           <p class="eyebrow">{e(c['client'])}</p>
@@ -741,16 +743,14 @@ def engagements_html(pg):
 
 def about_nick_html(pg):
     nick = next(t for t in TEAM if t["id"] == "nick")
-    pts = "".join(f"<li>{e(x)}</li>" for x in ABOUT_NICK["points"])
     return f"""<section class="block about" id="about">
     <div class="wrap about-grid">
-      <div class="about-photo"><div class="portrait big" aria-hidden="true">{nick['initials']}<img src="{pg.base}assets/img/team/nick.jpg" alt="" loading="lazy" onerror="this.remove()"></div></div>
+      <div class="about-photo"><div class="portrait big"><img src="{pg.base}assets/img/team/nick.jpg" alt="Nick Haverly, Director" loading="lazy" onerror="this.remove()"></div></div>
       <div>
         <p class="eyebrow">Who you work with</p>
         <h2>{e(nick['name'])}</h2>
         <p class="role">{e(nick['role'])}</p>
         <p class="about-lede">{e(ABOUT_NICK['lede'])}</p>
-        <ul class="creds">{pts}</ul>
         <div class="ctas" style="margin-top:24px">
           <a class="btn btn-civic" href="{pg.href('contact')}">Book a call with Nick</a>
           <a class="btn btn-outline" href="{pg.href('our-team')}">Meet the team</a>
@@ -881,27 +881,11 @@ def build_privacy():
 
 def build_hra_assistant():
     pg = Page("hra-assistant.html")
-    starters = "".join(f'<button type="button">{e(q)}</button>' for q in HRA_STARTERS)
     body = f"""{header(pg, 'tools')}
 <main id="main">
-{page_hero(pg, [("Home", ""), ("Tools", "useful-tools")], "HRA Assistant", "Ask a question about the Housing Revenue Account and get a clear answer drawn from our HRA knowledge base, with sources.", eyebrow="Tools")}
+{page_hero(pg, [("Home", ""), ("Tools", "useful-tools")], "A clearer starting point for your HRA questions.", "Ask a question about the Housing Revenue Account and get a clear answer drawn from our HRA knowledge base, with sources.", eyebrow="Tools", crumb="HRA Assistant")}
 <div class="wrap layout">
-  <div id="hra-chat" class="chat" data-endpoint="{e(SITE.get('hra_endpoint', ''))}" data-advisory="{pg.href('advisory-partnership')}" data-contact="{pg.href('contact')}">
-    <div class="chat-head"><b>Ask about the HRA</b><span class="chat-left">2 free questions today</span></div>
-    <p class="chat-note">General guidance on the Housing Revenue Account in England, as at October 2026. Not legal, financial or accounting advice.</p>
-    <div class="chat-log" aria-live="polite">
-      <div class="chat-starters">
-        <p>Try one of these, or type your own question below.</p>
-        {starters}
-      </div>
-    </div>
-    <form>
-      <label class="visually-hidden" for="hra-q">Your question</label>
-      <textarea id="hra-q" rows="1" maxlength="1000" placeholder="Ask a question about the HRA"></textarea>
-      <button class="btn btn-civic" type="submit">Ask</button>
-    </form>
-    <p class="chat-foot">Answers can be wrong. Check the sources cited and take advice before acting. Please don't include personal information in your questions. <a href="{pg.href('privacy')}#hra-assistant">How your questions are handled</a>.</p>
-  </div>
+  <div data-hra-inline></div>
   <aside class="aside">
     <div class="via">
       <p class="eyebrow">What it covers</p>
@@ -925,7 +909,7 @@ def build_hra_assistant():
     write(pg, head(pg, "HRA Assistant | Housing Revenue Account Questions Answered",
                    "Free AI assistant answering questions about the Housing Revenue Account in England, drawing on Haverly Consulting's HRA knowledge base with sources cited.",
                    noindex=not SITE.get("hra_endpoint"), og_eyebrow="Free tool")
-          + body + footer(pg, f'<script src="{pg.asset("js/hra-chat.js")}" defer></script>\n'))
+          + body + footer(pg))
 
 
 def build_pwlb_repayment():

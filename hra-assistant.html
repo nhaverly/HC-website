@@ -17,17 +17,15 @@
 <meta property="og:image:alt" content="HRA Assistant | Housing Revenue Account Questions Answered">
 <meta name="twitter:image" content="https://www.haverlyconsulting.co.uk/assets/og/hra-assistant.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0B2C34">
+<meta name="theme-color" content="#090F54">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/plex-sans-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/site.css?v=16">
+<link rel="stylesheet" href="assets/css/site.css?v=17">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
   <div class="wrap">
-    <a class="brand logo" href="./" aria-label="Haverly Consulting home"><img src="assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"></a>
+    <a class="brand logo" href="./" aria-label="Haverly Consulting home"><img src="assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"><span class="brand-label">CONSULTING</span></a>
     <nav class="nav" aria-label="Main">
       <div class="drop">
         <button type="button" aria-expanded="false" aria-haspopup="true">Services</button>
@@ -36,7 +34,7 @@
       <a href="case-studies">Case studies</a>
       <a href="blog">Insights</a>
       <a href="our-team">Team</a>
-      <a href="useful-tools" aria-current="page">Tools</a>
+      <a aria-current="page" href="useful-tools">Tools</a>
       <a class="btn btn-brass" href="contact">Book a consultation</a>
     </nav>
     <details class="menu">
@@ -60,28 +58,13 @@
 <section class="page-hero">
   <div class="wrap">
     <p class="crumbs"><a href="./">Home</a> / <a href="useful-tools">Tools</a> / <span>HRA Assistant</span></p>
-    <p class="eyebrow" style="margin-top:18px">Tools</p><h1>HRA Assistant</h1>
+    <p class="eyebrow" style="margin-top:18px">Tools</p><h1>A clearer starting point for your HRA questions.</h1>
     <p class="lede">Ask a question about the Housing Revenue Account and get a clear answer drawn from our HRA knowledge base, with sources.</p>
   </div>
 </section>
 
 <div class="wrap layout">
-  <div id="hra-chat" class="chat" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-advisory="advisory-partnership" data-contact="contact">
-    <div class="chat-head"><b>Ask about the HRA</b><span class="chat-left">2 free questions today</span></div>
-    <p class="chat-note">General guidance on the Housing Revenue Account in England, as at October 2026. Not legal, financial or accounting advice.</p>
-    <div class="chat-log" aria-live="polite">
-      <div class="chat-starters">
-        <p>Try one of these, or type your own question below.</p>
-        <button type="button">How much can council rents rise in 2027/28?</button><button type="button">Can councils keep all their Right to Buy receipts?</button><button type="button">Can we charge our homelessness team to the HRA?</button><button type="button">How should garages be accounted for in the HRA?</button>
-      </div>
-    </div>
-    <form>
-      <label class="visually-hidden" for="hra-q">Your question</label>
-      <textarea id="hra-q" rows="1" maxlength="1000" placeholder="Ask a question about the HRA"></textarea>
-      <button class="btn btn-civic" type="submit">Ask</button>
-    </form>
-    <p class="chat-foot">Answers can be wrong. Check the sources cited and take advice before acting. Please don't include personal information in your questions. <a href="privacy#hra-assistant">How your questions are handled</a>.</p>
-  </div>
+  <div data-hra-inline></div>
   <aside class="aside">
     <div class="via">
       <p class="eyebrow">What it covers</p>
@@ -104,7 +87,7 @@
 <footer class="site-foot">
   <div class="wrap cols">
     <div>
-      <a class="brand logo" href="./" aria-label="Haverly Consulting home"><img src="assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"></a>
+      <a class="brand logo" href="./" aria-label="Haverly Consulting home"><img src="assets/img/logo-wordmark.svg" alt="Haverly Consulting" width="78" height="44"><span class="brand-label">CONSULTING</span></a>
       <p>Independent housing finance advisory for UK local authorities and the affordable housing sector.</p>
     </div>
     <div><h2>Services</h2><ul><li><a href="advisory-partnership">Advisory Partnership</a></li><li><a href="finance-business-partnering">Finance Business Partnering</a></li><li><a href="financial-appraisals">Financial Appraisals</a></li><li><a href="financial-reviews">Financial Reviews</a></li><li><a href="project-management">Project Management</a></li><li><a href="training">Training and Development</a></li></ul></div>
@@ -126,7 +109,7 @@
     <span><a href="privacy">Privacy notice</a></span>
   </div>
 </footer>
-<script src="assets/js/site.js?v=16" defer></script>
-<script src="assets/js/hra-chat.js?v=16" defer></script>
+<script src="assets/js/site.js?v=17" defer></script>
+<script src="assets/js/hra-widget.js?v=17" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-site-root="./" defer></script>
 </body>
 </html>

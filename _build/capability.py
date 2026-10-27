@@ -32,45 +32,45 @@ def _html(c):
                      for t in (c.TESTIMONIALS[0], c.TESTIMONIALS[1]))
     addr = ", ".join(S["address"])
     return f"""<!doctype html><html><head><meta charset="utf-8"><style>
-@font-face{{font-family:Archivo;src:url("file://{FONTS}/archivo.ttf");font-weight:100 900;font-stretch:62% 125%}}
-@font-face{{font-family:Plex;src:url("file://{FONTS}/plex.ttf");font-weight:100 700}}
-@font-face{{font-family:PlexMono;src:url("file://{FONTS}/plexmono.ttf")}}
+@font-face{{font-family:Serif;src:url("file://{FONTS}/serif.woff2")}}
+@font-face{{font-family:Sans;src:url("file://{FONTS}/sans.ttf")}}
+@font-face{{font-family:Sans;font-weight:700;src:url("file://{FONTS}/sans-bold.ttf")}}
 @page{{size:A4;margin:0}}
 *{{box-sizing:border-box;margin:0}}
-body{{font-family:Plex,sans-serif;font-size:9.6pt;line-height:1.45;color:#13232C}}
+body{{font-family:Sans,Arial,sans-serif;font-size:9.6pt;line-height:1.45;color:#0B090A}}
 .page{{width:210mm;height:297mm;position:relative;overflow:hidden;page-break-after:always}}
 .page:last-child{{page-break-after:auto}}
-.band{{background:#0B2C34;color:#E8EFF1;padding:14mm 16mm 10mm}}
+  .band{{background:#090F54;border-top:2mm solid #1DB6D0;color:#FFFFFF;padding:14mm 16mm 10mm}}
 .top{{display:flex;justify-content:space-between;align-items:flex-start}}
 .logo{{background:#fff;padding:2.4mm 3.4mm;border-radius:1mm;display:flex}}.logo svg{{height:15mm;width:auto}}
-.doc{{font-family:PlexMono,monospace;font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:#E1A548;text-align:right}}
-.doc span{{display:block;color:#A3B8BE;margin-top:1.5mm}}
-h1{{font-family:Archivo,sans-serif;font-weight:800;font-stretch:82%;font-size:27pt;line-height:1.05;margin-top:9mm}}
-.lede{{color:#A3B8BE;font-size:11pt;margin-top:3mm;max-width:160mm}}
+.doc{{font-weight:700;font-size:7.6pt;letter-spacing:.15em;text-transform:uppercase;color:#1DB6D0;text-align:right}}
+.doc span{{display:block;color:#FFFFFF;margin-top:1.5mm}}
+h1{{font-family:Serif,Georgia,serif;font-weight:400;font-size:28pt;line-height:1.1;letter-spacing:-.03em;margin-top:9mm}}
+.lede{{color:#FFFFFF;font-size:11pt;margin-top:3mm;max-width:160mm}}
 .body{{padding:8mm 16mm 0;display:grid;gap:6mm}}
 .cols{{display:grid;grid-template-columns:1.25fr 1fr;gap:8mm}}
-h2{{font-family:PlexMono,monospace;font-weight:400;font-size:8pt;letter-spacing:.12em;text-transform:uppercase;color:#9A6416;border-bottom:.3mm solid #D3DADE;padding-bottom:1.5mm;margin-bottom:3mm}}
+h2{{font-weight:700;font-size:7.6pt;letter-spacing:.15em;text-transform:uppercase;color:#090F54;border-bottom:.3mm solid rgba(9,15,84,.16);padding-bottom:1.5mm;margin-bottom:3mm}}
 .svcs{{display:grid;grid-template-columns:1fr 1fr;gap:3.5mm 6mm}}
-.svc b{{font-family:Archivo,sans-serif;font-stretch:88%;font-size:11pt;display:block}}
-.svc p{{color:#53636C;font-size:8.8pt;margin-top:.6mm}}
+.svc b{{font-family:Sans,Arial,sans-serif;font-weight:700;font-size:10.5pt;color:#090F54;display:block}}
+.svc p{{color:#0B090A;font-size:8.8pt;margin-top:.6mm}}
 ul{{padding-left:0;list-style:none;display:grid;gap:2mm}}
 ul.creds2{{grid-template-columns:1fr 1fr;gap:2mm 7mm}}
-li{{padding-left:3mm;border-left:.6mm solid #E1A548;font-size:9pt}}
-.box{{background:#F3F5F6;border:.3mm solid #D3DADE;padding:4mm 5mm}}
+li{{padding-left:3mm;border-left:.6mm solid #1DB6D0;font-size:9pt}}
+.box{{background:#FFFFFF;border:.3mm solid rgba(9,15,84,.16);padding:4mm 5mm}}
 dl{{display:grid;grid-template-columns:auto 1fr;gap:1.4mm 4mm;font-size:9pt}}
-dt{{font-family:PlexMono,monospace;font-size:7.4pt;letter-spacing:.06em;text-transform:uppercase;color:#53636C;padding-top:.5mm}}
-.fw li b{{font-family:Archivo,sans-serif;font-stretch:88%;display:block;font-size:10pt}}
+dt{{font-weight:700;font-size:7pt;letter-spacing:.06em;text-transform:uppercase;color:#0B090A;padding-top:.5mm}}
+.fw li b{{font-weight:700;display:block;font-size:10pt;color:#090F54}}
 .cases{{display:grid;grid-template-columns:1fr 1fr;gap:5mm 7mm}}
-.case{{border-top:.8mm solid #0D4F5C;padding-top:2.5mm}}
-.case .eb{{font-family:PlexMono,monospace;font-size:7.2pt;letter-spacing:.08em;text-transform:uppercase;color:#9A6416}}
-.case h3{{font-family:Archivo,sans-serif;font-stretch:85%;font-weight:750;font-size:12pt;line-height:1.15;margin:1mm 0 1.2mm}}
-.case .fig{{color:#0D4F5C;margin-right:2mm}}
-.case p{{color:#53636C;font-size:8.8pt}}
-blockquote{{font-size:9pt;border-left:.6mm solid #0D4F5C;padding-left:3.5mm;margin-bottom:3.5mm}}
-cite{{display:block;font-style:normal;font-size:8pt;color:#53636C;margin-top:1mm}}
-.clients{{font-family:Archivo,sans-serif;font-stretch:88%;font-size:10pt;line-height:1.6}}
-.foot{{position:absolute;left:0;right:0;bottom:0;background:#103842;color:#A3B8BE;border-top:1mm solid #E1A548;padding:4mm 16mm;font-family:PlexMono,monospace;font-size:7.6pt;display:flex;justify-content:space-between}}
-.foot b{{color:#E8EFF1;font-weight:400}}
+.case{{border-top:.8mm solid #090F54;padding-top:2.5mm}}
+.case .eb{{font-weight:700;font-size:7pt;letter-spacing:.08em;text-transform:uppercase;color:#090F54}}
+.case h3{{font-family:Serif,Georgia,serif;font-weight:400;font-size:13pt;color:#090F54;line-height:1.15;margin:1mm 0 1.2mm}}
+.case .fig{{color:#090F54;margin-right:2mm}}
+.case p{{color:#0B090A;font-size:8.8pt}}
+blockquote{{font-size:9pt;border-left:.6mm solid #090F54;padding-left:3.5mm;margin-bottom:3.5mm}}
+cite{{display:block;font-style:normal;font-size:8pt;color:#0B090A;margin-top:1mm}}
+.clients{{font-size:9.6pt;line-height:1.7;color:#090F54}}
+.foot{{position:absolute;left:0;right:0;bottom:0;background:#090F54;color:#FFFFFF;border-top:1mm solid #1DB6D0;padding:4mm 16mm;font-size:7.6pt;display:flex;justify-content:space-between}}
+.foot b{{color:#FFFFFF;font-weight:400}}
 </style></head><body>
 <div class="page">
   <div class="band">

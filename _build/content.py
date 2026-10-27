@@ -56,6 +56,13 @@ CLIENTS = ["Cabinet Office", "City of Westminster", "Ealing Council", "Guildford
            "Waverley Borough Council", "Isle of Wight Council", "Gosport Borough Council", "Reading Borough Council",
            "Portsmouth City Council", "South Kesteven District Council"]
 
+# The "Our focus" panel in the homepage hero: (label, page it links to)
+HOME_FOCUS = [
+    ("Housing Revenue Account", "advisory-partnership"),
+    ("Temporary accommodation", "financial-appraisals"),
+    ("Housing & regeneration", "finance-business-partnering"),
+]
+
 # Procurement routes shown on the homepage and contact page
 FRAMEWORKS = [
     {"name": "YPO 1141", "via": "Consultancy+", "url": "https://servicesprocurement.consultancyplus.com/about",
@@ -467,7 +474,7 @@ CASE_STUDIES = [
 ]
 
 ABOUT_NICK = {
-    "lede": "Haverly Consulting is led by Nick Haverly, a CIPFA-qualified finance professional who has advised chief executives, elected members and central government on strategic financial matters.",
+    "lede": "Led by Nick Haverly FCPFA, our team combines technical expertise with first-hand experience of council finance. We work alongside you to turn complex challenges into clear, practical next steps.",
     "points": [
         "Fellow of CIPFA (FCPFA)",
         "Former Housing Adviser to the Local Government Association",
