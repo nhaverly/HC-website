@@ -181,7 +181,7 @@ def footer(pg, scripts=""):
     </ul></div>
   </div>
   <div class="wrap legal">
-    <span>© Haverly Consulting Ltd {date.today().year}. Registered in England and Wales, company number {SITE['company_number']}. Registered office: {', '.join(SITE['address'][:2])} {SITE['address'][2]}.</span>
+    <span>© Haverly Consulting Ltd {date.today().year}. Registered in England and Wales, company number {SITE['company_number']}. Registered office: {', '.join(SITE['address'][:-1])} {SITE['address'][-1]}.</span>
     <span><a href="{pg.href('privacy')}">Privacy notice</a></span>
   </div>
 </footer>
@@ -316,8 +316,8 @@ def build_home():
     org = {"@context": "https://schema.org", "@type": "ProfessionalService", "name": "Haverly Consulting Ltd",
            "url": SITE["url"] + "/", "email": SITE["email"], "telephone": SITE["phone_intl"],
            "description": "Independent housing finance advisory for UK local authorities and the affordable housing sector.",
-           "address": {"@type": "PostalAddress", "streetAddress": SITE["address"][0], "addressLocality": "London",
-                       "postalCode": SITE["address"][2], "addressCountry": "GB"},
+           "address": {"@type": "PostalAddress", "streetAddress": ", ".join(SITE["address"][:-2]), "addressLocality": SITE["address"][-2],
+                       "postalCode": SITE["address"][-1], "addressCountry": "GB"},
            "areaServed": "GB", "founder": {"@type": "Person", "name": "Nick Haverly", "jobTitle": "Director", "sameAs": [SITE["linkedin"]]}}
     practice = "".join(
         f'<li><div><b>{e(t)}</b><span>{e(d)}</span></div></li>' for t, d, _slug in PRACTICE)
