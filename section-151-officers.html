@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#090F54">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/site.css?v=20">
+<link rel="stylesheet" href="assets/css/site.css?v=21">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -132,6 +132,38 @@
     </div>
   </div>
 </section>
+<section class="block" id="data-insights" style="padding-bottom:0">
+  <div class="wrap" id="insights-data" data-base="" data-trend="[[&quot;31 March 2022&quot;, 33.93, 60.77], [&quot;31 March 2023&quot;, 31.53, 64.99], [&quot;31 March 2024&quot;, 30.47, 70.09], [&quot;31 March 2025&quot;, 30.38, 74.35], [&quot;31 March 2026&quot;, 31.14, 76.74]]">
+    <div class="sec-head">
+      <div><p class="eyebrow">Data insights</p><h2>What the numbers show.</h2></div>
+      <p class="intro">Our analysis of the official data on council audits and reserves. Hover over or tap a chart for the figures, or open the table beneath it.</p>
+    </div>
+    <div class="ins-grid">
+      <figure class="ins">
+        <figcaption><h3>The audit backlog, and the backstop</h3>
+        <p>Only 3 of 327 council audits for 2022/23 were signed by the statutory deadline. Backstop dates have pushed completion to 92% for 2024/25, but PSAA reports that more than half of the 2024/25 opinions issued by the end of March 2026 were disclaimed or qualified.</p></figcaption>
+        <p class="ins-key"><span class="ki"><span class="k1"></span>Signed by the statutory deadline</span> <span class="ki"><span class="k2"></span>Signed by the backstop date</span></p>
+        <div class="ins-chart"><canvas id="chartAudit" role="img" aria-label="Bar chart of the share of council audits signed by the deadline or backstop, by year"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">Accounts</th><th scope="col">Measured against</th><th scope="col">Signed in time</th><th scope="col">Share</th></tr></thead><tbody id="tblAudit"></tbody></table></div></details>
+        <p class="note">Principal councils in England (districts, unitaries, metropolitan districts, London boroughs and counties) audited under PSAA's scheme. Source: <a href="https://www.psaa.co.uk/managing-audit-quality/monthly-audit-opinion-data/september-2026-audit-opinion-data/" rel="noopener">PSAA audit opinion data</a>, as at 30 September 2026.</p>
+      </figure>
+      <figure class="ins">
+        <figcaption><h3>Reserves are holding in cash terms, but shrinking against spending</h3>
+        <p>English councils held £31.1bn of non-ringfenced reserves at 31 March 2026, close to the level of recent years. As a share of net revenue expenditure, they have fallen from 56% in 2022 to 41% in 2026.</p></figcaption>
+        <div class="ins-chart"><canvas id="chartTrend" role="img" aria-label="Line chart of non-ringfenced reserves as a share of net revenue expenditure, 2022 to 2026"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">At</th><th scope="col">Non-ringfenced reserves</th><th scope="col">Net revenue expenditure</th><th scope="col">Reserves as share</th></tr></thead><tbody><tr><td>31 March 2022</td><td>£33.9bn</td><td>£60.8bn</td><td>56%</td></tr><tr><td>31 March 2023</td><td>£31.5bn</td><td>£65.0bn</td><td>49%</td></tr><tr><td>31 March 2024</td><td>£30.5bn</td><td>£70.1bn</td><td>43%</td></tr><tr><td>31 March 2025</td><td>£30.4bn</td><td>£74.3bn</td><td>41%</td></tr><tr><td>31 March 2026</td><td>£31.1bn</td><td>£76.7bn</td><td>41%</td></tr></tbody></table></div></details>
+        <p class="note">All English local authorities. Other earmarked reserves (as adjusted by MHCLG for comparability where it provides an adjustment) plus unallocated reserves, as reported in each year's revenue outturn. Source: <a href="https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing" rel="noopener">MHCLG revenue expenditure and financing</a>.</p>
+      </figure>
+      <figure class="ins ins-wide">
+        <figcaption><h3>Reserves vary widely within every type of council</h3>
+        <p>Among unitary authorities, the middle half hold between 20% and 49% of net revenue expenditure in non-ringfenced reserves, and the lowest just 6%. Districts hold more relative to their spending because their net budgets are small. Use <a href="#compare">Compare your council</a> to find any council.</p></figcaption>
+        <div class="ins-chart tall"><canvas id="chartSpread" role="img" aria-label="Dot plot of each council's reserves as a share of net revenue expenditure, grouped by type of council"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">Type of council</th><th scope="col">Councils</th><th scope="col">Lowest</th><th scope="col">Lower quartile</th><th scope="col">Median</th><th scope="col">Upper quartile</th><th scope="col">Highest</th></tr></thead><tbody><tr><td>County councils</td><td>21</td><td>13%</td><td>19%</td><td>29%</td><td>43%</td><td>81%</td></tr><tr><td>Unitary authoritys</td><td>61</td><td>6%</td><td>20%</td><td>29%</td><td>49%</td><td>156%</td></tr><tr><td>Metropolitan districts</td><td>34</td><td>1%</td><td>18%</td><td>33%</td><td>46%</td><td>84%</td></tr><tr><td>London boroughs</td><td>33</td><td>15%</td><td>29%</td><td>39%</td><td>69%</td><td>240%</td></tr><tr><td>Shire districts</td><td>141</td><td>6%</td><td>93%</td><td>147%</td><td>224%</td><td>811%</td></tr></tbody></table></div></details>
+        <p class="note">Non-ringfenced reserves at 31 March 2026 as a share of 2025-26 net revenue expenditure, for the 290 councils with usable returns. Shown on a log scale so that districts and counties fit on one chart. Source: <a href="https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-individual-local-authority-data-outturn" rel="noopener">MHCLG revenue outturn 2025-26</a>.</p>
+      </figure>
+    </div>
+  </div>
+</section>
 <div class="wrap layout">
   <article class="prose">
     <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
@@ -177,7 +209,7 @@
   <aside class="aside">
     <nav class="related" aria-label="On this page">
       <p class="eyebrow">On this page</p>
-      <a href="#figures">Key figures</a><a href="#compare">Compare your council</a><a href="#role">The role at a glance</a><a href="#calendar">The annual cycle</a><a href="#library">Guidance library</a><a href="#directory">Directory of Section 151 officers</a><a href="#tools">Free tools</a><a href="#insights">Insights</a>
+      <a href="#figures">Key figures</a><a href="#compare">Compare your council</a><a href="#data-insights">Data insights</a><a href="#role">The role at a glance</a><a href="#calendar">The annual cycle</a><a href="#library">Guidance library</a><a href="#directory">Directory of Section 151 officers</a><a href="#tools">Free tools</a><a href="#insights">Insights</a>
     </nav>
     <div class="cta-card">
       <p class="eyebrow">Talk to a specialist</p>
@@ -298,10 +330,12 @@
     <span><a href="privacy">Privacy notice</a></span>
   </div>
 </footer>
-<script src="assets/js/site.js?v=20" defer></script>
-<script src="assets/js/s151-figures.js?v=20" defer></script>
-<script src="assets/js/s151-compare.js?v=20" defer></script>
-<script src="assets/js/hra-widget.js?v=20" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-site-root="./" defer></script>
+<script src="assets/js/site.js?v=21" defer></script>
+<script src="assets/js/s151-figures.js?v=21" defer></script>
+<script src="assets/js/s151-compare.js?v=21" defer></script>
+<script src="assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>
+<script src="assets/js/s151-insights.js?v=21" defer></script>
+<script src="assets/js/hra-widget.js?v=21" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-site-root="./" defer></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e538d1b7121b4a5dac1aa87ba5045514"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

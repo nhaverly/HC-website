@@ -616,3 +616,14 @@ S151_FIGURES = [
 # Compare-your-council data: regenerate with _build/data_reserves.py and _build/data_audit.py
 S151_RESERVES_YEAR = "2025-26"
 S151_RESERVES_PUBLISHED = "17 September 2026"
+
+# Data insights: England total non-ringfenced reserves (other earmarked, adjusted where MHCLG provides it,
+# plus unallocated) at 31 March, and net revenue expenditure for the year, £bn. From each year's
+# revenue outturn summary (RS), all English local authorities. Add one point each autumn.
+S151_RESERVES_TREND = [
+    ("31 March 2022", 33.93, 60.77),
+    ("31 March 2023", 31.53, 64.99),
+    ("31 March 2024", 30.47, 70.09),
+    ("31 March 2025", 30.38, 74.35),
+    ("31 March 2026", 31.14, 76.74),
+]

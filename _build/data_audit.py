@@ -55,7 +55,27 @@ def main(path, as_at, url):
             dt = r["Audit Signed Date"]
             dt = pd.to_datetime(dt, errors="coerce")
             out.setdefault(name, {})[yr[:4] + "/" + yr[7:]] = [st, None if pd.isna(dt) else dt.strftime("%Y-%m-%d")]
-    data = {"asAt": as_at, "source": url, "years": [y[:4] + "/" + y[7:] for y in YEARS], "councils": out}
+    # Timeliness series for the data insights chart: share of principal councils' audits signed by the
+    # statutory publishing date (to 2022/23) or by the backstop date (2023/24 onwards). Years still in
+    # progress (most audits unsigned) are left out.
+    series = []
+    for sh in xl.sheet_names:
+        if not re.match(r"^\d{4}-\d{4}$", sh):
+            continue
+        t = pd.read_excel(xl, sheet_name=sh)
+        t.columns = [str(c).strip() for c in t.columns]
+        t = t[t["Sector Type"].isin(SECT)]
+        st = t["Audit Status"].astype(str).str.strip()
+        total = len(t)
+        timely = int(st.isin(["Delivered On Time", "Delivered by backstop"]).sum())
+        pending = int(st.isin(["Unsigned", "Delay Likely"]).sum())
+        if total and pending / total < 0.5:
+            series.append({"year": sh[:4] + "/" + sh[7:], "councils": total, "timely": timely,
+                           "pct": round(100 * timely / total, 1), "outstanding": pending,
+                           "basis": "backstop" if int(sh[:4]) >= 2023 else "deadline"})
+    series.sort(key=lambda x: x["year"])
+    data = {"asAt": as_at, "source": url, "years": [y[:4] + "/" + y[7:] for y in YEARS], "councils": out,
+            "timeliness": series}
     with open(os.path.join(DATA, "s151-audit.json"), "w", encoding="utf-8") as f:
         json.dump(data, f, separators=(",", ":"))
     print(f"Wrote s151-audit.json: {len(out)} of {len(councils)} councils matched")

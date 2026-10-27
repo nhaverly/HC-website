@@ -477,3 +477,21 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}body{line-height:1.75}h1,h2
 @media (max-width:760px){.cmp-grid{grid-template-columns:1fr}}
 .cmp-audit{width:100%;min-width:0}
 .cmp-audit td,.cmp-audit th{white-space:normal;padding-right:10px}
+
+/* ---------- Section 151 hub: data insights ---------- */
+.ins-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px 32px}
+.ins{margin:0;border-top:3px solid var(--navy);padding-top:18px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.ins-wide{grid-column:1 / -1}
+.ins h3{font-size:1.35rem;color:var(--navy)}
+.ins figcaption p{margin-top:8px;max-width:70ch}
+.ins figcaption a{color:var(--civic);text-underline-offset:3px}
+.ins-chart{position:relative;height:300px}
+.ins-chart.tall{height:380px}
+.ins details summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--navy)}
+.ins-t{min-width:0}
+.ins-t td,.ins-t th{white-space:normal}
+.ins .note{margin-top:0}
+.ins-key{font-size:.84rem;display:flex;flex-wrap:wrap;gap:4px 16px;align-items:center}
+.ins-key .ki{display:inline-flex;align-items:center;gap:6px}.ins-key .k1,.ins-key .k2{display:inline-block;width:12px;height:12px;border-radius:2px}
+.ins-key .k1{background:#090F54}.ins-key .k2{background:#1A8FA6}
+@media (max-width:900px){.ins-grid{grid-template-columns:1fr}}

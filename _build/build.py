@@ -16,11 +16,11 @@ sys.path.insert(0, os.path.dirname(__file__))
 from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
                      SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK,
                      S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS, S151_FIGURES,
-                     S151_RESERVES_YEAR, S151_RESERVES_PUBLISHED)
+                     S151_RESERVES_YEAR, S151_RESERVES_PUBLISHED, S151_RESERVES_TREND)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "20"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "21"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1062,6 +1062,62 @@ def build_pwlb_vs_il():
           + body + footer(pg, scripts))
 
 
+def s151_insights_html(pg):
+    """Data insights charts. Spread statistics are computed from the comparison data at build time."""
+    import statistics as st
+    with open(os.path.join(ROOT, "assets", "data", "s151-reserves.json"), encoding="utf-8") as f:
+        R = json.load(f)
+    with open(os.path.join(ROOT, "assets", "data", "s151-audit.json"), encoding="utf-8") as f:
+        A = json.load(f)
+    rows = ""
+    spread = {}
+    for k in ["SC", "UA", "MD", "LB", "SD"]:
+        v = sorted(c["r31"] / c["nre"] * 100 for c in R["councils"] if c["c"] == k and "r31" in c)
+        q = st.quantiles(v, n=4)
+        spread[k] = (len(v), v[0], q[0], q[1], q[2], v[-1])
+        rows += f"<tr><td>{e(R['classes'][k])}s</td><td>{len(v)}</td><td>{v[0]:.0f}%</td><td>{q[0]:.0f}%</td><td>{q[1]:.0f}%</td><td>{q[2]:.0f}%</td><td>{v[-1]:.0f}%</td></tr>"
+    trend_rows = "".join(f"<tr><td>{e(d)}</td><td>£{r:.1f}bn</td><td>£{n:.1f}bn</td><td>{r / n * 100:.0f}%</td></tr>" for d, r, n in S151_RESERVES_TREND)
+    t0, t1 = S151_RESERVES_TREND[0], S151_RESERVES_TREND[-1]
+    tl = A.get("timeliness", [])
+    worst = min((x for x in tl if x["basis"] == "deadline"), key=lambda x: x["pct"])
+    latest = [x for x in tl if x["basis"] == "backstop"][-1]
+    ua = spread["UA"]
+    trend_json = e(json.dumps(S151_RESERVES_TREND))
+    src = 'rel="noopener"'
+    return f"""<section class="block" id="data-insights" style="padding-bottom:0">
+  <div class="wrap" id="insights-data" data-base="{pg.base}" data-trend="{trend_json}">
+    <div class="sec-head">
+      <div><p class="eyebrow">Data insights</p><h2>What the numbers show.</h2></div>
+      <p class="intro">Our analysis of the official data on council audits and reserves. Hover over or tap a chart for the figures, or open the table beneath it.</p>
+    </div>
+    <div class="ins-grid">
+      <figure class="ins">
+        <figcaption><h3>The audit backlog, and the backstop</h3>
+        <p>Only {worst['timely']} of {worst['councils']} council audits for {worst['year']} were signed by the statutory deadline. Backstop dates have pushed completion to {latest['pct']:.0f}% for {latest['year']}, but PSAA reports that more than half of the 2024/25 opinions issued by the end of March 2026 were disclaimed or qualified.</p></figcaption>
+        <p class="ins-key"><span class="ki"><span class="k1"></span>Signed by the statutory deadline</span> <span class="ki"><span class="k2"></span>Signed by the backstop date</span></p>
+        <div class="ins-chart"><canvas id="chartAudit" role="img" aria-label="Bar chart of the share of council audits signed by the deadline or backstop, by year"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">Accounts</th><th scope="col">Measured against</th><th scope="col">Signed in time</th><th scope="col">Share</th></tr></thead><tbody id="tblAudit"></tbody></table></div></details>
+        <p class="note">Principal councils in England (districts, unitaries, metropolitan districts, London boroughs and counties) audited under PSAA's scheme. Source: <a href="{e(A['source'])}" {src}>PSAA audit opinion data</a>, as at {e(A['asAt'])}.</p>
+      </figure>
+      <figure class="ins">
+        <figcaption><h3>Reserves are holding in cash terms, but shrinking against spending</h3>
+        <p>English councils held £{t1[1]:.1f}bn of non-ringfenced reserves at {t1[0]}, close to the level of recent years. As a share of net revenue expenditure, they have fallen from {t0[1] / t0[2] * 100:.0f}% in {t0[0][9:]} to {t1[1] / t1[2] * 100:.0f}% in {t1[0][9:]}.</p></figcaption>
+        <div class="ins-chart"><canvas id="chartTrend" role="img" aria-label="Line chart of non-ringfenced reserves as a share of net revenue expenditure, 2022 to 2026"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">At</th><th scope="col">Non-ringfenced reserves</th><th scope="col">Net revenue expenditure</th><th scope="col">Reserves as share</th></tr></thead><tbody>{trend_rows}</tbody></table></div></details>
+        <p class="note">All English local authorities. Other earmarked reserves (as adjusted by MHCLG for comparability where it provides an adjustment) plus unallocated reserves, as reported in each year's revenue outturn. Source: <a href="https://www.gov.uk/government/collections/local-authority-revenue-expenditure-and-financing" {src}>MHCLG revenue expenditure and financing</a>.</p>
+      </figure>
+      <figure class="ins ins-wide">
+        <figcaption><h3>Reserves vary widely within every type of council</h3>
+        <p>Among unitary authorities, the middle half hold between {ua[2]:.0f}% and {ua[4]:.0f}% of net revenue expenditure in non-ringfenced reserves, and the lowest just {ua[1]:.0f}%. Districts hold more relative to their spending because their net budgets are small. Use <a href="#compare">Compare your council</a> to find any council.</p></figcaption>
+        <div class="ins-chart tall"><canvas id="chartSpread" role="img" aria-label="Dot plot of each council's reserves as a share of net revenue expenditure, grouped by type of council"></canvas></div>
+        <details><summary>Show the data</summary><div class="table-wrap"><table class="rates ins-t"><thead><tr><th scope="col">Type of council</th><th scope="col">Councils</th><th scope="col">Lowest</th><th scope="col">Lower quartile</th><th scope="col">Median</th><th scope="col">Upper quartile</th><th scope="col">Highest</th></tr></thead><tbody>{rows}</tbody></table></div></details>
+        <p class="note">Non-ringfenced reserves at 31 March 2026 as a share of {e(S151_RESERVES_YEAR)} net revenue expenditure, for the {sum(x[0] for x in spread.values())} councils with usable returns. Shown on a log scale so that districts and counties fit on one chart. Source: <a href="https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-individual-local-authority-data-outturn" {src}>MHCLG revenue outturn {e(S151_RESERVES_YEAR)}</a>.</p>
+      </figure>
+    </div>
+  </div>
+</section>"""
+
+
 def build_s151():
     pg = Page("section-151-officers.html")
     ext = ' rel="noopener"'
@@ -1076,7 +1132,7 @@ def build_s151():
         rows = "".join(f'<li><b><a href="{e(u)}"{ext}>{e(t)}</a></b><span>{e(n)}</span></li>' for t, u, n in items)
         lib += f"\n    <h3>{e(group)}</h3>\n    <ul class=\"scope\">{rows}</ul>"
     posts = [p for p in POSTS if p.get("tag") in S151_TAGS][:6]
-    toc = [("figures", "Key figures"), ("compare", "Compare your council"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
+    toc = [("figures", "Key figures"), ("compare", "Compare your council"), ("data-insights", "Data insights"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
            ("directory", "Directory of Section 151 officers"), ("tools", "Free tools"), ("insights", "Insights")]
     toc_html = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc)
     tiles = "".join(f"""<div class="fig">
@@ -1091,6 +1147,7 @@ def build_s151():
         <p>Certainty rate (standard rate less 20 basis points), updated daily from Debt Management Office data.</p>
         <p class="src">As at <span id="pwlbAsOf">today</span>. <a href="https://dmo.gov.uk/responsibilities/local-authority-lending/lending-arrangements" rel="noopener">DMO</a></p>
       </div>"""
+    insights = s151_insights_html(pg)
     figures = f"""<section class="block" id="figures" style="padding-bottom:0">
   <div class="wrap">
     <div class="sec-head">
@@ -1123,6 +1180,7 @@ def build_s151():
     </div>
   </div>
 </section>
+{insights}
 <div class="wrap layout">
   <article class="prose">
     <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
@@ -1193,7 +1251,7 @@ def build_s151():
 """
     write(pg, head(pg, "Resources for Section 151 Officers",
                    "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
-                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n'))
+                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n<script src="{pg.base}assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>\n<script src="{pg.asset("js/s151-insights.js")}" defer></script>\n'))
 
 
 def build_404():
