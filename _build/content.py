@@ -586,3 +586,29 @@ S151_LIBRARY = [
 # Insight tags shown on the hub
 S151_TAGS = {"Temporary accommodation", "HRA and rents", "Borrowing and treasury", "Housing companies",
              "Transactions", "Budget 2026", "Homelessness", "Social housing"}
+
+# Key figures panel: (label, figure, detail, source label, source url, as at)
+# Refreshed monthly by scheduled task, with Nick's approval. Checked 27 October 2026.
+S151_FIGURES = [
+    ("2024/25 audit opinions", "248 of 433",
+     "issued were disclaimed or qualified, 240 of them because of the backstop. 185 were unmodified and 24 were still outstanding.",
+     "PSAA", "https://www.psaa.co.uk/2026/05/may-2026-update/", "31 March 2026"),
+    ("Non-ringfenced reserves", "£31.1bn",
+     "held by English councils at 31 March 2026, up £0.9bn in the year. Councils added £660m to reserves in 2025-26, after drawing £766m in 2024-25.",
+     "MHCLG revenue outturn", "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-first-release/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-first-release", "17 September 2026"),
+    ("Exceptional Financial Support", "36 councils",
+     "have in-principle support for 2026-27, worth around £1.5bn in total.",
+     "GOV.UK", "https://www.gov.uk/guidance/exceptional-financial-support-for-local-authorities-for-2026-27", "updated 18 August 2026"),
+    ("Homelessness spending", "£2.3bn",
+     "net in 2025-26, two thirds of councils' net housing spending outside the HRA. Gross spending was £4.0bn.",
+     "MHCLG revenue outturn", "https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-first-release/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-first-release", "17 September 2026"),
+    ("Council tax referendum limits", "3% + 2%",
+     "core principle plus adult social care precept, 2026-27 to 2028-29. Shire districts: 3% or £5, whichever is higher.",
+     "Core spending power note", "https://www.gov.uk/government/publications/explanatory-note-on-core-spending-power-final-local-government-finance-settlement-2026-27-to-2028-29/explanatory-note-on-core-spending-power-final-local-government-finance-settlement-2026-27-to-2028-29", "February 2026"),
+    ("Social rent cap, 2027/28", "4.5%",
+     "the expected limit: September 2026 CPI of 3.5% plus 1%, under the Rent Standard. The Regulator confirms the limit each year.",
+     "ONS", "https://www.ons.gov.uk/economy/inflationandpriceindices/bulletins/consumerpriceinflation/september2026", "21 October 2026"),
+    ("Bank Rate", "3.75%",
+     "held by the Bank of England's Monetary Policy Committee on 17 September 2026. CPI inflation was 3.5% in September.",
+     "Bank of England", "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate", "17 September 2026"),
+]

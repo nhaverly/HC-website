@@ -15,11 +15,11 @@ from datetime import date
 sys.path.insert(0, os.path.dirname(__file__))
 from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
                      SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK,
-                     S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS)
+                     S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS, S151_FIGURES)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "17"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "18"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1075,12 +1075,36 @@ def build_s151():
         rows = "".join(f'<li><b><a href="{e(u)}"{ext}>{e(t)}</a></b><span>{e(n)}</span></li>' for t, u, n in items)
         lib += f"\n    <h3>{e(group)}</h3>\n    <ul class=\"scope\">{rows}</ul>"
     posts = [p for p in POSTS if p.get("tag") in S151_TAGS][:6]
-    toc = [("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
+    toc = [("figures", "Key figures"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
            ("directory", "Directory of Section 151 officers"), ("tools", "Free tools"), ("insights", "Insights")]
     toc_html = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc)
+    tiles = "".join(f"""<div class="fig">
+        <p class="eyebrow">{e(lbl)}</p>
+        <p class="num">{e(num)}</p>
+        <p>{e(det)}</p>
+        <p class="src">Source: <a href="{e(u)}"{ext}>{e(sl)}</a>, {e(asat)}</p>
+      </div>""" for lbl, num, det, sl, u, asat in S151_FIGURES)
+    tiles += """<div class="fig">
+        <p class="eyebrow">PWLB maturity rates</p>
+        <div class="rates-mini" id="pwlbLive" aria-live="polite"><span>Loading today's rates…</span></div>
+        <p>Certainty rate, updated daily from Debt Management Office data.</p>
+        <p class="src">As at <span id="pwlbAsOf">today</span>. <a href="https://dmo.gov.uk/responsibilities/local-authority-lending/lending-arrangements" rel="noopener">DMO</a></p>
+      </div>"""
+    figures = f"""<section class="block" id="figures" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Key figures</p><h2>Where the sector stands.</h2></div>
+      <p class="intro">The latest national figures for English councils, each linked to its official source. Updated monthly.</p>
+    </div>
+    <div class="figs">
+      {tiles}
+    </div>
+  </div>
+</section>"""
     body = f"""{header(pg, 'tools')}
 <main id="main">
 {page_hero(pg, [("Home", "")], "Resources for Section 151 officers", "The legislation, codes, deadlines and tools that chief finance officers rely on, gathered in one place and checked against official sources.", eyebrow="Section 151 hub", crumb="Section 151 hub")}
+{figures}
 <div class="wrap layout">
   <article class="prose">
     <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
@@ -1108,7 +1132,7 @@ def build_s151():
     <p>The primary sources Section 151 officers refer to most often.</p>{lib}
 
     <h2 id="directory">Directory of Section 151 officers</h2>
-    <p>We are compiling a directory of Section 151 officers across UK councils. It will show each officer's name and role as published by their own council, with a link to that source and the date we last checked it. It will not include personal contact details.</p>
+    <p>We are compiling a directory of Section 151 officers across UK councils. It will show each officer's name and role as published by their own council, with a link to that source and the date we last checked it. It will not include personal contact details. Alongside it, we will publish a monthly round-up of new Section 151 appointments and moves.</p>
     <p>It will be published here shortly. If you are a Section 151 officer and would like your entry corrected or left out, email <a href="mailto:{SITE['email']}">{SITE['email']}</a>.</p>
 
     <p class="note">Spotted something out of date? Please <a href="mailto:{SITE['email']}">let us know</a>. This page is general information, not legal or financial advice.</p>
@@ -1151,7 +1175,7 @@ def build_s151():
 """
     write(pg, head(pg, "Resources for Section 151 Officers",
                    "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
-                   og_eyebrow="Section 151 hub") + body + footer(pg))
+                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n'))
 
 
 def build_404():

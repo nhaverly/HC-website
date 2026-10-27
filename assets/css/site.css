@@ -437,3 +437,16 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}body{line-height:1.75}h1,h2
 .calc>*{min-width:0}.panel fieldset{min-width:0}.npv-card{min-width:0}.chart-box{min-width:0;max-width:100%}.chart-box canvas{max-width:100%}
 @media(max-width:960px){.calc{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:360px){.hero h1{font-size:38px}}
+
+/* ---------- Section 151 hub: key figures ---------- */
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}
+.fig{border-top:3px solid var(--cyan);padding:18px 0 0;display:flex;flex-direction:column;gap:8px}
+.fig .eyebrow{color:var(--navy)}
+.fig .num{font-family:var(--f-display);font-stretch:85%;font-size:clamp(1.9rem,3vw,2.5rem);font-weight:750;color:var(--navy);line-height:1}
+.fig p{font-size:.92rem}
+.fig .src{font-size:.78rem;color:var(--muted);margin-top:auto;padding-top:6px}
+.fig .src a{color:var(--civic);text-underline-offset:3px}
+.fig .rates-mini{display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:2px 18px;font-size:.92rem}
+.fig .rates-mini b{font-family:var(--f-display);font-size:1.5rem;color:var(--navy);display:block;line-height:1.1}
+@media (max-width:1000px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.figs{grid-template-columns:1fr}}
