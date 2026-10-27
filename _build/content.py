@@ -19,6 +19,7 @@ SITE = {
     # Web address of the HRA Assistant back end (the Cloudflare Worker), e.g.
     # "https://haverly-hra-assistant.yourname.workers.dev". While empty, the Tools page
     # does not link to the assistant and the page shows a "being set up" message.
+    "cf_analytics_token": "e538d1b7121b4a5dac1aa87ba5045514",
     "hra_endpoint": "https://haverly-hra-assistant.nick-haverly.workers.dev/",
 }
 

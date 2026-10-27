@@ -151,8 +151,8 @@ def analytics():
     tok = SITE.get("cf_analytics_token")
     if not tok:
         return ""
-    return ("<script defer src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
-            f"data-cf-beacon='{{\"token\": \"{e(tok)}\"}}'></script>\n")
+    return ("<!-- Cloudflare Web Analytics --><script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
+            f"data-cf-beacon='{{\"token\": \"{e(tok)}\"}}'></script><!-- End Cloudflare Web Analytics -->\n")
 
 
 def hra_widget(pg):
@@ -823,7 +823,7 @@ def build_case_studies():
                    og_byline="Westminster · Guildford · Waverley · Gosport") + body + footer(pg))
 
 
-PRIVACY_UPDATED = "2026-10-23"
+PRIVACY_UPDATED = "2026-10-27"
 
 
 def build_privacy():
