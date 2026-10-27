@@ -20,7 +20,7 @@ from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "23"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "24"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1184,9 +1184,11 @@ def build_s151():
         rows = "".join(f'<li><b><a href="{e(u)}"{ext}>{e(t)}</a></b><span>{e(n)}</span></li>' for t, u, n in items)
         lib += f"\n    <h3>{e(group)}</h3>\n    <ul class=\"scope\">{rows}</ul>"
     posts = [p for p in POSTS if p.get("tag") in S151_TAGS][:6]
-    toc = [("figures", "Key figures"), ("compare", "Compare your council"), ("data-insights", "Data insights"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
-           ("directory", "Directory of Section 151 officers"), ("tools", "Free tools"), ("insights", "Insights")]
-    toc_html = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc)
+    toc = [("figures", "Key figures"), ("compare", "Compare your council"), ("data-insights", "Data insights"),
+           ("role", "The role"), ("calendar", "Key dates"), ("library", "Guidance"),
+           ("s151-directory", "Directory"), ("tools", "Tools"), ("insights", "Insights")]
+    hubnav = ('<nav class="hub-nav" id="hubNav" aria-label="Sections of this page"><div class="wrap"><ul>'
+              + "".join(f'<li><a href="#{a}">{e(t)}</a></li>' for a, t in toc) + "</ul></div></nav>")
     tiles = "".join(f"""<div class="fig">
         <p class="eyebrow">{e(lbl)}</p>
         <p class="num">{e(num)}</p>
@@ -1215,6 +1217,7 @@ def build_s151():
     body = f"""{header(pg, 'tools')}
 <main id="main">
 {page_hero(pg, [("Home", "")], "Resources for Section 151 officers", "The legislation, codes, deadlines and tools that chief finance officers rely on, gathered in one place and checked against official sources.", eyebrow="Section 151 hub", crumb="Section 151 hub")}
+{hubnav}
 {figures}
 <section class="block" id="compare" style="padding-bottom:0">
   <div class="wrap">
@@ -1266,10 +1269,6 @@ def build_s151():
     <p class="note">Spotted something out of date? Please <a href="mailto:{SITE['email']}">let us know</a>. This page is general information, not legal or financial advice.</p>
   </article>
   <aside class="aside">
-    <nav class="related" aria-label="On this page">
-      <p class="eyebrow">On this page</p>
-      {toc_html}
-    </nav>
     <div class="cta-card">
       <p class="eyebrow">Talk to a specialist</p>
       <h2>Need a second opinion?</h2>
@@ -1304,7 +1303,7 @@ def build_s151():
 """
     write(pg, head(pg, "Resources for Section 151 Officers",
                    "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
-                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n<script src="{pg.base}assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>\n<script src="{pg.asset("js/s151-insights.js")}" defer></script>\n<script src="{pg.asset("js/s151-directory.js")}" defer></script>\n'))
+                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n<script src="{pg.base}assets/js/vendor/chart-4.5.0.umd.min.js" defer></script>\n<script src="{pg.asset("js/s151-insights.js")}" defer></script>\n<script src="{pg.asset("js/s151-directory.js")}" defer></script>\n<script src="{pg.asset("js/s151-nav.js")}" defer></script>\n'))
 
 
 def build_404():
