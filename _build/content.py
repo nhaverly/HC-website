@@ -484,3 +484,105 @@ ABOUT_NICK = {
         "Financial lead on award-winning property, energy and regeneration schemes across the UK",
     ],
 }
+
+
+# ------------------------------------------------------------ Section 151 hub
+# Every date and link below was checked against the official source on
+# 27 October 2026. Re-check each autumn (S151_CHECKED) before the budget cycle.
+S151_CHECKED = "2026-10-27"
+
+# The annual cycle in England: (when, what, source label, source url)
+S151_CALENDAR = [
+    ("1 April", "New financial year begins. New social rents take effect, within the limit set by the Rent Standard.",
+     "Rent Standard and guidance", "https://www.gov.uk/government/collections/rent-standard-and-guidance"),
+    ("Quarterly", "Report treasury management activity and prudential indicators. Quarters 2 and 4 normally go to full council or the executive.",
+     "CIPFA Prudential Code", "https://cipfa.org/policy-and-guidance/publications/t/the-prudential-code-for-capital-finance-in-local-authorities-2021-edition"),
+    ("By 30 June", "Publish the draft (unaudited) statement of accounts and annual governance statement.",
+     "Accounts and Audit Regulations 2015", "https://www.legislation.gov.uk/uksi/2015/234/contents"),
+    ("Summer to autumn", "Report the annual treasury management review of the previous year to members.",
+     "CIPFA Treasury Management Code", "https://cipfa.org/policy-and-guidance/publications/t/treasury-management-in-the-public-services-code-of-practice-and-crosssectoral-guidance-notes-2021-edition"),
+    ("Autumn", "UK Budget. Refresh the medium-term financial strategy and test the assumptions behind next year's budget.",
+     None, None),
+    ("December", "Provisional local government finance settlement, usually published in mid to late December.",
+     "Local government finance settlement", "https://www.gov.uk/government/collections/final-local-government-finance-settlement-england-2026-2027-to-2028-2029"),
+    ("1 December to 31 January", "Billing authorities calculate the council tax base and notify precepting authorities.",
+     "Council tax base regulations", "https://www.legislation.gov.uk/uksi/2012/2914/contents"),
+    ("January to February", "Set rents and the HRA budget for April, update the HRA 30-year business plan and give tenants notice of rent changes.",
+     "Policy statement on rents", "https://www.gov.uk/government/publications/direction-on-the-rent-standard-2026/policy-statement-on-rents-for-social-housing"),
+    ("February", "Final settlement. Full council approves the budget, capital strategy, treasury management strategy and MRP statement, with the chief finance officer's section 25 report on the robustness of estimates and adequacy of reserves.",
+     "Local Government Act 2003, s25", "https://www.legislation.gov.uk/ukpga/2003/26/section/25"),
+    ("Before 1 March", "Major precepting authorities issue their precepts.",
+     "Local Government Finance Act 1992, s40", "https://www.legislation.gov.uk/ukpga/1992/14/section/40"),
+    ("Before 11 March", "Billing authorities set council tax for the coming year.",
+     "Local Government Finance Act 1992, s30", "https://www.legislation.gov.uk/ukpga/1992/14/section/30"),
+    ("1 to 31 March", "Submit capital spending and borrowing plans for the current year and next two years to the PWLB, with the section 151 officer's assurance on investment assets bought primarily for yield.",
+     "PWLB guidance for applicants", "https://www.dmo.gov.uk/media/qa2npqvv/pwlb-guidance-for-applicants-for-publishing-november.pdf"),
+]
+
+# Audit backstop dates (England), from the written ministerial statement of 4 March 2025
+S151_BACKSTOPS = [
+    ("2025/26", "31 January 2027"),
+    ("2026/27", "30 November 2027"),
+    ("2027/28", "30 November 2028"),
+]
+S151_BACKSTOP_SOURCE = "https://questions-statements.parliament.uk/written-statements/1780736"
+
+# Guidance library: (group, [(title, url, note)])
+S151_LIBRARY = [
+    ("The role", [
+        ("Local Government Act 1972, section 151", "https://www.legislation.gov.uk/ukpga/1972/70/section/151",
+         "The duty to make arrangements for the proper administration of financial affairs, and to appoint an officer responsible for them."),
+        ("Local Government Finance Act 1988, section 114", "https://www.legislation.gov.uk/ukpga/1988/41/section/114",
+         "When the chief finance officer must report unlawful expenditure or an unbalanced budget."),
+        ("Local Government Act 2003, section 25", "https://www.legislation.gov.uk/ukpga/2003/26/section/25",
+         "The report on the robustness of budget estimates and the adequacy of reserves."),
+        ("CIPFA: The role of the chief financial officer in local government", "https://www.cipfa.org/policy-and-guidance/reports/the-role-of-the-chief-financial-officer-in-local-government",
+         "CIPFA's statement of the principles and responsibilities of the role."),
+        ("CIPFA Financial Management Code", "https://www.cipfa.org/fmcode",
+         "Standards of financial management for local authorities."),
+        ("Best value standards and intervention: statutory guide", "https://www.gov.uk/government/publications/best-value-standards-and-intervention-a-statutory-guide-for-best-value-authorities/best-value-standards-and-intervention-a-statutory-guide-for-best-value-authorities",
+         "The characteristics of a well-functioning authority, including on finance, and how government intervenes."),
+    ]),
+    ("Capital and treasury", [
+        ("CIPFA Prudential Code (2021 edition)", "https://cipfa.org/policy-and-guidance/publications/t/the-prudential-code-for-capital-finance-in-local-authorities-2021-edition",
+         "The framework for affordable, prudent and sustainable capital investment and borrowing."),
+        ("CIPFA Treasury Management Code (2021 edition)", "https://cipfa.org/policy-and-guidance/publications/t/treasury-management-in-the-public-services-code-of-practice-and-crosssectoral-guidance-notes-2021-edition",
+         "The code of practice for treasury management in the public services."),
+        ("Minimum revenue provision: statutory guidance (5th edition)", "https://www.gov.uk/government/publications/capital-finance-guidance-on-minimum-revenue-provision-third-edition/capital-finance-guidance-on-minimum-revenue-provision-5th-edition",
+         "Applies to accounting periods starting on or after 1 April 2025."),
+        ("Local government investments: statutory guidance (3rd edition)", "https://www.gov.uk/government/publications/capital-finance-guidance-on-local-government-investments-second-edition",
+         "Guidance on treasury and non-treasury investments, applying from 1 April 2018."),
+        ("Capital Finance and Accounting Regulations 2003", "https://www.legislation.gov.uk/uksi/2003/3146/contents",
+         "The regulations behind MRP, capital receipts and the use of capital resources in England."),
+        ("PWLB lending arrangements", "https://dmo.gov.uk/responsibilities/local-authority-lending/lending-arrangements",
+         "The Debt Management Office's lending facility, rates and terms."),
+        ("PWLB guidance for applicants", "https://www.dmo.gov.uk/media/qa2npqvv/pwlb-guidance-for-applicants-for-publishing-november.pdf",
+         "Eligibility, the annual capital plan return and the section 151 officer's assurance."),
+    ]),
+    ("Funding and financial resilience", [
+        ("Final local government finance settlement 2026-27 to 2028-29", "https://www.gov.uk/government/collections/final-local-government-finance-settlement-england-2026-2027-to-2028-2029",
+         "The multi-year settlement for English councils."),
+        ("Exceptional financial support for local authorities", "https://www.gov.uk/government/collections/exceptional-financial-support-for-local-authorities",
+         "How the government supports councils that cannot set a balanced budget, and the support agreed to date."),
+        ("CIPFA Financial Resilience Index", "https://www.cipfa.org/services/financial-resilience-index",
+         "Comparative indicators of financial resilience for English councils."),
+    ]),
+    ("Accounts and audit", [
+        ("Accounts and Audit Regulations 2015", "https://www.legislation.gov.uk/uksi/2015/234/contents",
+         "Requirements for internal control, the annual governance statement and publishing accounts."),
+        ("Audit backstop dates: written ministerial statement", "https://questions-statements.parliament.uk/written-statements/1780736",
+         "The statutory backstop dates for accounts and audit, set out on 4 March 2025."),
+        ("CIPFA/LASAAC Code of Practice on Local Authority Accounting", "https://cms.cipfa.org/policy-and-guidance/cipfa-lasaac-local-authority-code-board/code-of-practice",
+         "The accounting code that statements of accounts must follow."),
+    ]),
+    ("Housing and the HRA", [
+        ("Rent Standard and guidance", "https://www.gov.uk/government/collections/rent-standard-and-guidance",
+         "The Regulator of Social Housing's Rent Standard, which applies to council landlords."),
+        ("Policy statement on rents for social housing", "https://www.gov.uk/government/publications/direction-on-the-rent-standard-2026/policy-statement-on-rents-for-social-housing",
+         "The government's rent policy from 1 April 2026."),
+    ]),
+]
+
+# Insight tags shown on the hub
+S151_TAGS = {"Temporary accommodation", "HRA and rents", "Borrowing and treasury", "Housing companies",
+             "Transactions", "Budget 2026", "Homelessness", "Social housing"}

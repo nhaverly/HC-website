@@ -14,7 +14,8 @@ from datetime import date
 
 sys.path.insert(0, os.path.dirname(__file__))
 from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
-                     SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK)
+                     SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK,
+                     S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
@@ -130,6 +131,7 @@ def header(pg, current=""):
         <a{cur('our-team')} href="{pg.href('our-team')}">Team</a>
         <a{cur('testimonials')} href="{pg.href('testimonials')}">Testimonials</a>
         <a{cur('useful-tools')} href="{pg.href('useful-tools')}">Tools</a>
+        <a{cur('section-151-officers')} href="{pg.href('section-151-officers')}">Section 151 hub</a>
         <a{cur('contact')} href="{pg.href('contact')}">Contact</a>
       </div>
     </details>
@@ -201,6 +203,7 @@ def footer(pg, scripts=""):
       <li><a href="{pg.href('testimonials')}">Testimonials</a></li>
       <li><a href="{pg.href('blog')}">Insights</a></li>
       <li><a href="{pg.href('useful-tools')}">Tools</a></li>
+      <li><a href="{pg.href('section-151-officers')}">Section 151 hub</a></li>
     </ul></div>
     <div><h2>Contact</h2><ul>
       <li><a href="mailto:{SITE['email']}">{SITE['email']}</a></li>
@@ -729,7 +732,9 @@ def build_tools():
 <main id="main">
 {page_hero(pg, [("Home", "")], "Useful tools", "Free calculators for local authority treasury and finance teams.", eyebrow="Tools")}
 <section class="block">
-  <div class="wrap">{tools_html(pg)}</div>
+  <div class="wrap">{tools_html(pg)}
+    <p style="margin-top:32px">Looking for legislation, codes and key dates? See our <a class="link" href="{pg.href('section-151-officers')}">resources for Section 151 officers</a>.</p>
+  </div>
 </section>
 {contact_band(pg)}
 </main>
@@ -1056,6 +1061,99 @@ def build_pwlb_vs_il():
           + body + footer(pg, scripts))
 
 
+def build_s151():
+    pg = Page("section-151-officers.html")
+    ext = ' rel="noopener"'
+
+    def src(label, url):
+        return f' <a href="{e(url)}"{ext}>{e(label)}</a>' if url else ""
+    cal = "".join(f"<li><b>{e(w)}</b><span>{e(t)}{(' Source:' + src(l, u)) if u else ''}</span></li>"
+                  for w, t, l, u in S151_CALENDAR)
+    backstops = "".join(f"<li><b>{e(y)} accounts</b><span>{e(d)}</span></li>" for y, d in S151_BACKSTOPS)
+    lib = ""
+    for group, items in S151_LIBRARY:
+        rows = "".join(f'<li><b><a href="{e(u)}"{ext}>{e(t)}</a></b><span>{e(n)}</span></li>' for t, u, n in items)
+        lib += f"\n    <h3>{e(group)}</h3>\n    <ul class=\"scope\">{rows}</ul>"
+    posts = [p for p in POSTS if p.get("tag") in S151_TAGS][:6]
+    toc = [("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
+           ("directory", "Directory of Section 151 officers"), ("tools", "Free tools"), ("insights", "Insights")]
+    toc_html = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc)
+    body = f"""{header(pg, 'tools')}
+<main id="main">
+{page_hero(pg, [("Home", "")], "Resources for Section 151 officers", "The legislation, codes, deadlines and tools that chief finance officers rely on, gathered in one place and checked against official sources.", eyebrow="Section 151 hub", crumb="Section 151 hub")}
+<div class="wrap layout">
+  <article class="prose">
+    <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
+    <p>Every link below goes to the official source. We check the dates and links each year before the budget cycle begins. Last checked {fmt_date(S151_CHECKED)}.</p>
+
+    <h2 id="role">The role at a glance</h2>
+    <p>Section 151 of the <a href="https://www.legislation.gov.uk/ukpga/1972/70/section/151"{ext}>Local Government Act 1972</a> requires every council to make arrangements for the proper administration of its financial affairs, and to make one officer responsible for them. That officer, usually the director of finance, is known as the section 151 officer or chief finance officer.</p>
+    <p>Three statutory duties define the role in practice:</p>
+    <ul>
+      <li><strong>Section 114 reports.</strong> Under the <a href="https://www.legislation.gov.uk/ukpga/1988/41/section/114"{ext}>Local Government Finance Act 1988</a>, the chief finance officer must report if the council has made, or is about to make, unlawful expenditure, or if expenditure is likely to exceed the resources available to meet it.</li>
+      <li><strong>Section 25 reports.</strong> Under the <a href="https://www.legislation.gov.uk/ukpga/2003/26/section/25"{ext}>Local Government Act 2003</a>, the chief finance officer must report to council, when it sets the budget, on the robustness of the estimates and the adequacy of reserves.</li>
+      <li><strong>Prudential borrowing.</strong> The council sets its own borrowing limits under the <a href="https://cipfa.org/policy-and-guidance/publications/t/the-prudential-code-for-capital-finance-in-local-authorities-2021-edition"{ext}>CIPFA Prudential Code</a>, and the chief finance officer advises on whether capital plans are affordable, prudent and sustainable.</li>
+    </ul>
+    <p>CIPFA's statement on <a href="https://www.cipfa.org/policy-and-guidance/reports/the-role-of-the-chief-financial-officer-in-local-government"{ext}>the role of the chief financial officer in local government</a> sets out the principles behind the role, including direct access to the chief executive and a seat at the leadership table.</p>
+    <p class="note">This page focuses on England. Sections 151 and 114 also apply in Wales, where councils follow Welsh Government guidance. Scotland and Northern Ireland have their own frameworks.</p>
+
+    <h2 id="calendar">The annual cycle</h2>
+    <p>The key statutory and regulatory dates in a typical English council's financial year.</p>
+    <ul class="scope">{cal}</ul>
+    <h3>Audit backstop dates</h3>
+    <p>Accounts must be audited, with the auditor's opinion published, by these statutory backstop dates. <a href="{S151_BACKSTOP_SOURCE}"{ext}>Written ministerial statement, 4 March 2025</a>.</p>
+    <ul class="scope">{backstops}</ul>
+
+    <h2 id="library">Guidance library</h2>
+    <p>The primary sources Section 151 officers refer to most often.</p>{lib}
+
+    <h2 id="directory">Directory of Section 151 officers</h2>
+    <p>We are compiling a directory of Section 151 officers across UK councils. It will show each officer's name and role as published by their own council, with a link to that source and the date we last checked it. It will not include personal contact details.</p>
+    <p>It will be published here shortly. If you are a Section 151 officer and would like your entry corrected or left out, email <a href="mailto:{SITE['email']}">{SITE['email']}</a>.</p>
+
+    <p class="note">Spotted something out of date? Please <a href="mailto:{SITE['email']}">let us know</a>. This page is general information, not legal or financial advice.</p>
+  </article>
+  <aside class="aside">
+    <nav class="related" aria-label="On this page">
+      <p class="eyebrow">On this page</p>
+      {toc_html}
+    </nav>
+    <div class="cta-card">
+      <p class="eyebrow">Talk to a specialist</p>
+      <h2>Need a second opinion?</h2>
+      <p>We support Section 151 officers on HRA business plans, temporary accommodation costs, capital financing and MTFP pressures.</p>
+      <a class="btn btn-brass" href="{pg.href('contact')}">Request a call back</a>
+      <p class="small"><a href="mailto:{SITE['email']}">{SITE['email']}</a><br><a href="tel:{SITE['phone_intl']}">{SITE['phone']}</a></p>
+    </div>
+  </aside>
+</div>
+<section class="block" id="tools" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Free tools</p><h2>Calculators and the HRA Assistant.</h2></div>
+      <p class="intro">Built for local authority treasury and housing finance teams. Free to use.</p>
+    </div>
+    {tools_html(pg)}
+  </div>
+</section>
+<section class="block" id="insights" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Insights</p><h2>For Section 151 officers.</h2></div>
+      <p class="intro"><a class="link" href="{pg.href('blog')}">All articles</a></p>
+    </div>
+    <div class="posts">{post_cards(pg, posts)}</div>
+  </div>
+</section>
+{frameworks_html(pg)}
+{contact_band(pg)}
+</main>
+"""
+    write(pg, head(pg, "Resources for Section 151 Officers",
+                   "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
+                   og_eyebrow="Section 151 hub") + body + footer(pg))
+
+
 def build_404():
     pg = Page("404.html")
     # 404 is served from any depth, so use absolute links here
@@ -1078,7 +1176,7 @@ def build_sitemap():
     today = date.today().isoformat()
     urls = [("", today), ("blog", today), ("our-team", today), ("testimonials", today), ("contact", today),
             ("useful-tools", today), ("pwlb-premium/discount-calculator", today), ("pwlb-v-il", today),
-            ("case-studies", today), ("privacy", today)]
+            ("case-studies", today), ("privacy", today), ("section-151-officers", today)]
     if SITE.get("hra_endpoint"):
         urls.append(("hra-assistant", today))
     urls += [(s["slug"], today) for s in SERVICES]
@@ -1104,6 +1202,7 @@ if __name__ == "__main__":
     build_hra_assistant()
     build_case_studies()
     build_privacy()
+    build_s151()
     build_404()
     build_sitemap()
     from og import render_cards
