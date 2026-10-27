@@ -106,6 +106,11 @@ TEAM = [
 
 # Newest first. "tag" shows as the eyebrow on the article.
 POSTS = [
+    {"slug": "rough-sleeping-funding-temporary-accommodation-subsidy-gap-budget-2026",
+     "title": "£874m for Rough Sleeping Is Welcome. Temporary Accommodation Is the Bigger Bill.",
+     "short": "Rough sleeping gets £874m. TA is the bigger bill",
+     "date": "2026-10-27", "tag": "Temporary accommodation",
+     "desc": "Rough sleeping funding has almost doubled. But councils spent £2.93bn on temporary accommodation last year, with subsidy still frozen at 2011 rents."},
     {"slug": "westminster-city-council-pension-fund-50m-sale-and-leaseback-frees-up-capital-for-new-temporary-accommodation",
      "title": "Westminster City Council Pension Fund: £50m Sale-and-Leaseback Frees Up Capital for New Temporary Accommodation",
      "short": "Westminster Pension Fund: £50m sale-and-leaseback frees up capital for new TA",
