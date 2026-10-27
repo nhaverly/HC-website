@@ -612,3 +612,7 @@ S151_FIGURES = [
      "held by the Bank of England's Monetary Policy Committee on 17 September 2026. CPI inflation was 3.5% in September.",
      "Bank of England", "https://www.bankofengland.co.uk/monetary-policy/the-interest-rate-bank-rate", "17 September 2026"),
 ]
+
+# Compare-your-council data: regenerate with _build/data_reserves.py and _build/data_audit.py
+S151_RESERVES_YEAR = "2025-26"
+S151_RESERVES_PUBLISHED = "17 September 2026"

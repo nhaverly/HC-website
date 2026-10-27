@@ -450,3 +450,30 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}body{line-height:1.75}h1,h2
 .fig .rates-mini b{font-family:var(--f-display);font-size:1.5rem;color:var(--navy);display:block;line-height:1.1}
 @media (max-width:1000px){.figs{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:560px){.figs{grid-template-columns:1fr}}
+
+/* ---------- Section 151 hub: compare your council ---------- */
+.cmp-pick{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-bottom:28px}
+.cmp-pick label{display:block;font-weight:600;margin-bottom:6px}
+.cmp-pick input{font:inherit;padding:12px 14px;border:1px solid var(--navy);min-width:min(420px,100%);background:var(--white);color:var(--ink)}
+#cmpOut h3{font-size:1.6rem;color:var(--navy)}
+#cmpOut h4{font-family:var(--f-display);font-size:1.25rem;color:var(--navy);margin:32px 0 8px}
+.cmp-sub{color:var(--muted);margin:6px 0 20px}
+.cmp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+.cmp-card{border:1px solid var(--rule);border-top:3px solid var(--cyan);padding:20px;display:flex;flex-direction:column;gap:8px}
+.cmp-card .num{font-family:var(--f-display);font-size:2rem;font-weight:750;color:var(--navy);line-height:1}
+.cmp-card p{font-size:.94rem}
+.cmp-bar{position:relative;height:14px;background:rgb(9 15 84 / .07);margin-top:10px}
+.cmp-bar .iqr{position:absolute;top:0;bottom:0;background:rgb(29 182 208 / .35)}
+.cmp-bar .med{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--navy)}
+.cmp-bar .you{position:absolute;top:-5px;width:14px;height:24px;margin-left:-7px;background:var(--navy);border:2px solid var(--white);border-radius:2px}
+.cmp-key{font-size:.78rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.cmp-key span{display:inline-block;width:10px;height:10px;margin-right:-6px}
+.cmp-key .k-you{background:var(--navy)}.cmp-key .k-med{width:2px;height:12px;background:var(--navy)}.cmp-key .k-iqr{background:rgb(29 182 208 / .35)}
+.cmp-audit td,.cmp-audit th{text-align:left}
+.fig .pwlb-t{width:100%;border-collapse:collapse;font-size:.86rem}
+.fig .pwlb-t th,.fig .pwlb-t td{padding:3px 4px;text-align:right;border-bottom:1px solid var(--rule)}
+.fig .pwlb-t th:first-child,.fig .pwlb-t td:first-child{text-align:left}
+.fig .pwlb-t td b{font-family:var(--f-display);color:var(--navy);font-size:1.05rem}
+@media (max-width:760px){.cmp-grid{grid-template-columns:1fr}}
+.cmp-audit{width:100%;min-width:0}
+.cmp-audit td,.cmp-audit th{white-space:normal;padding-right:10px}

@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#090F54">
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/css/site.css?v=18">
+<link rel="stylesheet" href="assets/css/site.css?v=19">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -115,6 +115,23 @@
     </div>
   </div>
 </section>
+<section class="block" id="compare" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Compare your council</p><h2>Reserves and audit status, against your peers.</h2></div>
+      <p class="intro">Choose an English council to see its reserves against councils of the same type, and the status of its external audits.</p>
+    </div>
+    <div id="cmp" data-base="">
+      <div class="cmp-pick">
+        <div><label for="cmpCouncil">Council</label>
+        <input id="cmpCouncil" list="councilList" autocomplete="off" placeholder="Start typing a council name" disabled>
+        <datalist id="councilList"></datalist></div>
+      </div>
+      <div id="cmpOut" aria-live="polite"></div>
+      <p class="note">Reserves are non-ringfenced (unallocated plus earmarked, excluding schools, Dedicated Schools Grant and public health) as reported by each council in its 2025-26 revenue outturn return to MHCLG, published 17 September 2026. They are not audited figures and may differ from the council's statement of accounts. Net revenue expenditure is used to compare councils of different sizes. <a href="https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-individual-local-authority-data-outturn" rel="noopener">Source data</a>.</p>
+    </div>
+  </div>
+</section>
 <div class="wrap layout">
   <article class="prose">
     <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
@@ -160,7 +177,7 @@
   <aside class="aside">
     <nav class="related" aria-label="On this page">
       <p class="eyebrow">On this page</p>
-      <a href="#figures">Key figures</a><a href="#role">The role at a glance</a><a href="#calendar">The annual cycle</a><a href="#library">Guidance library</a><a href="#directory">Directory of Section 151 officers</a><a href="#tools">Free tools</a><a href="#insights">Insights</a>
+      <a href="#figures">Key figures</a><a href="#compare">Compare your council</a><a href="#role">The role at a glance</a><a href="#calendar">The annual cycle</a><a href="#library">Guidance library</a><a href="#directory">Directory of Section 151 officers</a><a href="#tools">Free tools</a><a href="#insights">Insights</a>
     </nav>
     <div class="cta-card">
       <p class="eyebrow">Talk to a specialist</p>
@@ -281,9 +298,10 @@
     <span><a href="privacy">Privacy notice</a></span>
   </div>
 </footer>
-<script src="assets/js/site.js?v=18" defer></script>
-<script src="assets/js/s151-figures.js?v=18" defer></script>
-<script src="assets/js/hra-widget.js?v=18" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-site-root="./" defer></script>
+<script src="assets/js/site.js?v=19" defer></script>
+<script src="assets/js/s151-figures.js?v=19" defer></script>
+<script src="assets/js/s151-compare.js?v=19" defer></script>
+<script src="assets/js/hra-widget.js?v=19" data-endpoint="https://haverly-hra-assistant.nick-haverly.workers.dev/" data-site-root="./" defer></script>
 <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e538d1b7121b4a5dac1aa87ba5045514"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>

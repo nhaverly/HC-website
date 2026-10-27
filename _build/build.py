@@ -15,11 +15,12 @@ from datetime import date
 sys.path.insert(0, os.path.dirname(__file__))
 from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS, TEAM, POSTS,  # noqa: E402
                      SERVICE_PAGES, FRAMEWORKS, CASE_STUDIES, ABOUT_NICK,
-                     S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS, S151_FIGURES)
+                     S151_CHECKED, S151_CALENDAR, S151_BACKSTOPS, S151_BACKSTOP_SOURCE, S151_LIBRARY, S151_TAGS, S151_FIGURES,
+                     S151_RESERVES_YEAR, S151_RESERVES_PUBLISHED)
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "18"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "19"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -1075,7 +1076,7 @@ def build_s151():
         rows = "".join(f'<li><b><a href="{e(u)}"{ext}>{e(t)}</a></b><span>{e(n)}</span></li>' for t, u, n in items)
         lib += f"\n    <h3>{e(group)}</h3>\n    <ul class=\"scope\">{rows}</ul>"
     posts = [p for p in POSTS if p.get("tag") in S151_TAGS][:6]
-    toc = [("figures", "Key figures"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
+    toc = [("figures", "Key figures"), ("compare", "Compare your council"), ("role", "The role at a glance"), ("calendar", "The annual cycle"), ("library", "Guidance library"),
            ("directory", "Directory of Section 151 officers"), ("tools", "Free tools"), ("insights", "Insights")]
     toc_html = "".join(f'<a href="#{a}">{e(t)}</a>' for a, t in toc)
     tiles = "".join(f"""<div class="fig">
@@ -1105,6 +1106,23 @@ def build_s151():
 <main id="main">
 {page_hero(pg, [("Home", "")], "Resources for Section 151 officers", "The legislation, codes, deadlines and tools that chief finance officers rely on, gathered in one place and checked against official sources.", eyebrow="Section 151 hub", crumb="Section 151 hub")}
 {figures}
+<section class="block" id="compare" style="padding-bottom:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="eyebrow">Compare your council</p><h2>Reserves and audit status, against your peers.</h2></div>
+      <p class="intro">Choose an English council to see its reserves against councils of the same type, and the status of its external audits.</p>
+    </div>
+    <div id="cmp" data-base="{pg.base}">
+      <div class="cmp-pick">
+        <div><label for="cmpCouncil">Council</label>
+        <input id="cmpCouncil" list="councilList" autocomplete="off" placeholder="Start typing a council name" disabled>
+        <datalist id="councilList"></datalist></div>
+      </div>
+      <div id="cmpOut" aria-live="polite"></div>
+      <p class="note">Reserves are non-ringfenced (unallocated plus earmarked, excluding schools, Dedicated Schools Grant and public health) as reported by each council in its {S151_RESERVES_YEAR} revenue outturn return to MHCLG, published {S151_RESERVES_PUBLISHED}. They are not audited figures and may differ from the council's statement of accounts. Net revenue expenditure is used to compare councils of different sizes. <a href="https://www.gov.uk/government/statistics/local-authority-revenue-expenditure-and-financing-england-2025-to-2026-individual-local-authority-data-outturn" rel="noopener">Source data</a>.</p>
+    </div>
+  </div>
+</section>
 <div class="wrap layout">
   <article class="prose">
     <p class="intro-line">A practical reference for chief finance officers and their teams in English local government.</p>
@@ -1175,7 +1193,7 @@ def build_s151():
 """
     write(pg, head(pg, "Resources for Section 151 Officers",
                    "Legislation, codes, key dates and free tools for local authority Section 151 officers and chief finance officers, checked against official sources.",
-                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n'))
+                   og_eyebrow="Section 151 hub") + body + footer(pg, f'<script src="{pg.asset("js/s151-figures.js")}" defer></script>\n<script src="{pg.asset("js/s151-compare.js")}" defer></script>\n'))
 
 
 def build_404():
