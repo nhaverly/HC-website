@@ -20,7 +20,7 @@ from content import (HOME_FOCUS, SITE, SERVICES, PRACTICE, CLIENTS, TESTIMONIALS
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 POST_DIR = os.path.join(os.path.dirname(__file__), "posts")
-ASSET_V = "22"  # bump to bust browser caches after CSS/JS changes
+ASSET_V = "23"  # bump to bust browser caches after CSS/JS changes
 e = html.escape
 
 
@@ -141,9 +141,9 @@ def header(pg, current=""):
 """
 
 DIRECTORY_PRIVACY = """<h3 id="directory">Our directory of Section 151 officers</h3>
-    <p>Our <a href="section-151-officers#s151-directory">Section 151 hub</a> includes a directory of the officers who hold the statutory Section 151 (chief finance officer) role at English councils. For each, we publish only their name and job title, the council, and a link to the council's own published document that names them, with its date.</p>
+    <p>Our <a href="section-151-officers#s151-directory">Section 151 hub</a> includes a directory of the officers who hold the statutory Section 151 (chief finance officer) role at English councils. For each, we publish only the council, their name and their job title.</p>
     <ul>
-      <li><strong>Where the information comes from:</strong> councils' own public documents, such as statements of accounts, council and committee reports, and their websites.</li>
+      <li><strong>Where the information comes from:</strong> councils' own public documents, such as statements of accounts, council and committee reports, and their websites, and our own professional knowledge of the sector.</li>
       <li><strong>Why we publish it:</strong> to provide a public reference resource for the local government finance sector. Our lawful basis is our legitimate interest in doing so. The information relates only to people's public, statutory roles and is already published by their councils.</li>
       <li><strong>What we do not do:</strong> we do not collect or publish contact details, and we do not use the directory for marketing.</li>
       <li><strong>How long we keep it:</strong> we review the directory regularly and remove or update an entry when someone leaves the role.</li>
@@ -1095,20 +1095,20 @@ def s151_directory_html(pg):
         D = json.load(f)
     n = sum(1 for x in D["entries"] if x.get("name"))
     intro = (f'<p>Our <a href="#s151-directory">directory</a> lists the Section 151 officer at {n} English councils, '
-             "each taken from the council's own published sources and linked to them.</p>")
+             "drawn from councils' own published documents.</p>")
     html = f"""<section class="block" id="s151-directory" style="padding-bottom:0">
   <div class="wrap" id="dir" data-base="{pg.base}" data-v="{s151_data_version()}">
     <div class="sec-head">
       <div><p class="eyebrow">Directory</p><h2>Section 151 officers in England.</h2></div>
-      <p class="intro">Each council's Section 151 officer as named in its own published documents, usually its 2025/26 statement of accounts, with a link to the source and its date.</p>
+      <p class="intro">The Section 151 officer at each English council, with their job title, drawn from councils' own published documents, such as their 2025/26 statements of accounts.</p>
     </div>
     <div class="dir-tools">
       <div><label for="dirSearch">Search</label><input id="dirSearch" type="search" placeholder="Council or name" autocomplete="off"></div>
       <div><label for="dirType">Type of council</label><select id="dirType"><option value="">All councils</option></select></div>
       <p class="dir-count" id="dirCount" aria-live="polite"></p>
     </div>
-    <div class="table-wrap"><table class="rates dir-t"><thead><tr><th scope="col">Council</th><th scope="col">Section 151 officer</th><th scope="col">Source</th></tr></thead><tbody id="dirBody"><tr><td colspan="3">Loading…</td></tr></tbody></table></div>
-    <p class="note">Names and job titles only, as published by each council; we do not hold or publish contact details. Last checked {e(D.get("checked", ""))}. If you are listed and would like your entry corrected or removed, or you know of a change, email {mail}. See our <a href="{pg.href('privacy')}#directory">privacy notice</a>.</p>
+    <div class="table-wrap"><table class="rates dir-t"><thead><tr><th scope="col">Council</th><th scope="col">Section 151 officer</th></tr></thead><tbody id="dirBody"><tr><td colspan="2">Loading…</td></tr></tbody></table></div>
+    <p class="note">Names and job titles only; we do not publish contact details. Last checked {e(D.get("checked", ""))}. If you are listed and would like your entry corrected or removed, or you know of a change, email {mail}. See our <a href="{pg.href('privacy')}#directory">privacy notice</a>.</p>
   </div>
 </section>"""
     return html, intro

@@ -508,6 +508,4 @@ html{scroll-behavior:smooth;scroll-padding-top:110px}body{line-height:1.75}h1,h2
 .dir-tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border:1px solid var(--navy);padding:1px 6px;margin-left:4px;color:var(--navy)}
 #s151-directory .table-wrap{max-height:640px;overflow:auto;border:1px solid var(--rule)}
 #s151-directory thead th{position:sticky;top:0;background:var(--white)}
-@media (max-width:600px){.dir-t td:nth-child(3),.dir-t th:nth-child(3){display:none}.dir-count{margin-left:0}}
-.dir-src-m{display:none;margin-top:6px;font-size:.85rem}
-@media (max-width:600px){.dir-src-m{display:block}}
+@media (max-width:600px){.dir-count{margin-left:0}}

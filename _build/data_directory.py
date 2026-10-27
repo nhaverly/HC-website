@@ -2,7 +2,8 @@
 """Builds assets/data/s151-directory.json from reviewed research files.
 
 Usage: python3 _build/data_directory.py reviewed.json "October 2026"
-reviewed.json is a list of {"council","name","title","interim","source","url","date"} using MHCLG council names.
+reviewed.json is a list of {"council","name","title","interim",...} using MHCLG council names.
+Only council, name, title and interim flag are published; keep the source records privately for queries.
 Council types come from assets/data/s151-reserves.json. Only names taken from councils' own published sources.
 """
 import json, os, sys
@@ -25,8 +26,10 @@ def main(src, checked):
     for n, t in types.items():
         r = rows.get(n, {})
         e = {"council": tidy(n), "type": t}
-        if r.get("name"):
-            e.update({k: r.get(k) for k in ("name", "title", "interim", "source", "url", "date")})
+        if r.get("vacant"):
+            e["vacant"] = True
+        elif r.get("name"):
+            e.update({k: r.get(k) for k in ("name", "title", "interim")})
         out.append(e)
     json.dump({"checked": checked, "entries": out}, open(os.path.join(DATA, "s151-directory.json"), "w"), separators=(",", ":"))
     print(f"{sum(1 for x in out if x.get('name'))} of {len(out)} councils with a confirmed S151 officer")

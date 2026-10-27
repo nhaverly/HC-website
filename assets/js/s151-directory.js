@@ -20,12 +20,11 @@
       return (!t || x.type === t) && (!term || (x.council + ' ' + (x.name || '')).toLowerCase().indexOf(term) >= 0);
     });
     body.innerHTML = rows.map(function (x) {
-      var who = x.name
+      var who = x.vacant ? '<span class="dir-role">Post currently vacant</span>' : x.name
         ? '<b>' + esc(x.name) + '</b>' + (x.interim ? ' <span class="dir-tag">Interim</span>' : '') + '<br><span class="dir-role">' + esc(x.title) + '</span>'
         : '<span class="dir-role">Not yet confirmed from published sources</span>';
-      var src = x.url ? '<a href="' + esc(x.url) + '" rel="noopener nofollow">' + esc(x.source) + '</a><br><span class="dir-role">' + esc(when(x.date)) + '</span>' : '';
-      return '<tr><td>' + esc(x.council) + '</td><td>' + who + (src ? '<div class="dir-src-m">' + src + '</div>' : '') + '</td><td>' + src + '</td></tr>';
-    }).join('') || '<tr><td colspan="3">No councils match your search.</td></tr>';
+      return '<tr><td>' + esc(x.council) + '</td><td>' + who + '</td></tr>';
+    }).join('') || '<tr><td colspan="2">No councils match your search.</td></tr>';
     count.textContent = rows.length + ' of ' + D.length + ' councils';
   }
   fetch(base + 'assets/data/s151-directory.json' + dv).then(function (r) { return r.json(); }).then(function (j) {
@@ -35,5 +34,5 @@
     });
     q.addEventListener('input', render); typ.addEventListener('change', render);
     render();
-  }).catch(function () { body.innerHTML = '<tr><td colspan="3">The directory could not be loaded. Please try again later.</td></tr>'; });
+  }).catch(function () { body.innerHTML = '<tr><td colspan="2">The directory could not be loaded. Please try again later.</td></tr>'; });
 })();
