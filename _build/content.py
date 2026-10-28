@@ -114,6 +114,11 @@ TEAM = [
 
 # Newest first. "tag" shows as the eyebrow on the article.
 POSTS = [
+    {"slug": "budget-2026-council-housing-temporary-accommodation",
+     "title": "Budget 2026: More Council Homes, No Relief for Temporary Accommodation",
+     "short": "Budget 2026: more council homes, no relief for TA",
+     "date": "2026-10-28", "tag": "Temporary accommodation",
+     "desc": "An extra £1.5bn for social rent and cheaper PWLB borrowing, but LHA stays frozen and TA subsidy is untouched. What the Budget means for councils."},
     {"slug": "rough-sleeping-funding-temporary-accommodation-subsidy-gap-budget-2026",
      "title": "£874m for Rough Sleeping Is Welcome. Temporary Accommodation Is the Bigger Bill.",
      "short": "Rough sleeping gets £874m. TA is the bigger bill",
