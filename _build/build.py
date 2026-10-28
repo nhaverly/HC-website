@@ -145,7 +145,7 @@ DIRECTORY_PRIVACY = """<h3 id="directory">Our directory of Section 151 officers<
     <ul>
       <li><strong>Where the information comes from:</strong> councils' own public documents, such as statements of accounts, council and committee reports, and their websites, and our own professional knowledge of the sector.</li>
       <li><strong>Why we publish it:</strong> to provide a public reference resource for the local government finance sector. Our lawful basis is our legitimate interest in doing so. The information relates only to people's public, statutory roles and is already published by their councils.</li>
-      <li><strong>What we do not do:</strong> we do not collect or publish contact details, and we do not use the directory for marketing.</li>
+      <li><strong>What we do not do:</strong> we do not publish contact details in the directory.</li>
       <li><strong>How long we keep it:</strong> we review the directory regularly and remove or update an entry when someone leaves the role.</li>
       <li><strong>Your rights:</strong> if you are listed, you can ask us to correct your entry, or object to it being shown, by emailing us at the address above. We will act on your request promptly.</li>
     </ul>"""
@@ -839,7 +839,7 @@ def build_case_studies():
                    og_byline="Westminster · Guildford · Waverley · Gosport") + body + footer(pg))
 
 
-PRIVACY_UPDATED = "2026-10-27"
+PRIVACY_UPDATED = "2026-10-28"
 
 
 def build_privacy():
@@ -876,6 +876,9 @@ def build_privacy():
     <h3>When you browse the site</h3>
     <p>This website is hosted by GitHub Pages. Like most web hosts, GitHub may record visitors' IP addresses in its server logs for security and operational purposes. The PWLB comparison tool loads daily reference rates from GitHub, which may also see your IP address.</p>
     {ANALYTICS_PRIVACY if SITE.get("cf_analytics_token") else NO_ANALYTICS_PRIVACY}
+
+    <h3 id="professional-contacts">Professional contacts</h3>
+    <p>We hold the work contact details of officers in local government and the housing sector, including details published by their organisations, so that we can contact them about our services, insights and events. Our lawful basis is our legitimate interest in business-to-business contact. Every email we send tells you how we obtained your details and gives a simple way to opt out, and we will stop contacting you as soon as you ask. We keep these details only while they remain relevant to your role, and we do not share them with anyone else.</p>
 
     <h2>How long we keep your information</h2>
     <p>We keep enquiry details for as long as we need them to respond and follow up. If we go on to work together, we keep relevant records for the duration of that relationship and for up to six years afterwards, to meet legal and accounting requirements. If we don't work together, we delete enquiry details within two years.</p>
