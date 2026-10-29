@@ -114,6 +114,11 @@ TEAM = [
 
 # Newest first. "tag" shows as the eyebrow on the article.
 POSTS = [
+    {"slug": "budget-2026-small-print-190000-fewer-homes-councils",
+     "title": "Budget 2026 Small Print: The OBR Now Expects 190,000 Fewer Homes",
+     "short": "Budget 2026 small print: 190,000 fewer homes",
+     "date": "2026-10-29", "tag": "Budget 2026",
+     "desc": "The OBR's housing downgrade, a lower Green Book discount rate, new council duties and TA parked until 2027: the Budget small print for councils."},
     {"slug": "budget-2026-council-housing-temporary-accommodation",
      "title": "Budget 2026: More Council Homes, No Relief for Temporary Accommodation",
      "short": "Budget 2026: more council homes, no relief for TA",
