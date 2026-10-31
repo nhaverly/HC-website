@@ -1327,6 +1327,194 @@ def build_404():
     write(pg, head(pg, "Page not found", "Page not found.", noindex=True) + body + footer(pg))
 
 
+TA_FINDER_SLUG = "ta-finder-preview-cd7ce7c4"  # unlisted preview: not linked, not in the sitemap, noindex
+
+TA_FINDER_CSS = """<style>
+.taf{padding-block:40px 64px;display:grid;gap:28px}
+.taf [hidden]{display:none!important}
+.taf .steps{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid var(--rule);padding-bottom:16px}
+.taf .steps button{font:inherit;font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;padding:9px 14px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--navy);cursor:pointer}
+.taf .steps button[aria-current="page"]{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.taf .page{display:grid;gap:24px}
+.taf .page-head{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.taf .page-head h2{font-size:clamp(1.5rem,2.6vw,2rem);font-weight:700}
+.taf .page-head .note{margin-top:6px}
+.taf .demo{margin:0;padding:12px 16px;border-left:4px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,var(--white));font-size:.9rem}
+.taf .panel-head{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between}
+.taf .panel-head .note{margin-top:4px}
+.taf .num-badge{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--navy);color:var(--white);font-size:.85rem;margin-right:10px;vertical-align:middle}
+.taf .lnks{display:flex;flex-wrap:wrap;gap:16px}
+.taf .lnk{background:none;border:0;padding:0;font:inherit;font-size:.86rem;color:var(--navy);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.taf .row{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;margin-top:18px}
+.taf .row .field{flex:0 1 20rem}
+.taf .row .note{margin:0}
+.taf .pick{display:grid;gap:20px;max-height:28rem;overflow:auto;margin-top:18px;padding-right:6px}
+.taf .grp{display:grid;gap:10px}
+.taf .grp-head{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline}
+.taf .grp-head strong{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--navy)}
+.taf .grp-head .note{margin:0}
+.taf .chips{display:flex;flex-wrap:wrap;gap:8px}
+.taf .chip{font:inherit;font-size:.86rem;padding:6px 12px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink);cursor:pointer;display:inline-flex;gap:8px;align-items:baseline}
+.taf .chip:hover{border-color:var(--navy)}
+.taf .chip[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.taf .chip .c{font-variant-numeric:tabular-nums;opacity:.75}
+.taf .epc .field{max-width:20rem;margin-top:18px}
+.taf .go{display:flex;flex-wrap:wrap;gap:16px 24px;align-items:center;justify-content:space-between;background:var(--band);color:var(--band-ink);padding:24px 28px}
+.taf .go p{margin:0;font-size:1.05rem}
+.taf .go b{color:var(--cyan);font-variant-numeric:tabular-nums}
+.taf .take{margin:0;font-size:1.08rem;max-width:72ch}
+.taf .take b{font-variant-numeric:tabular-nums}
+.taf .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:16px}
+.taf .tile{background:var(--surface);border:1px solid var(--rule);border-top:4px solid var(--navy);padding:20px;display:grid;gap:6px;align-content:start}
+.taf .tile .k{margin:0;font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.taf .tile .v{margin:0;font-family:var(--f-display);font-size:2rem;line-height:1.1;color:var(--navy);font-variant-numeric:tabular-nums}
+.taf .tile .s{margin:0;font-size:.84rem;color:var(--muted)}
+.taf .tablebox{overflow:auto;max-height:42rem;border:1px solid var(--rule);margin-top:18px}
+.taf table{width:100%;border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums}
+.taf th{position:sticky;top:0;background:var(--navy);color:var(--white);text-align:left;font-weight:600;padding:10px;white-space:nowrap}
+.taf th button{all:unset;cursor:pointer}
+.taf th button:focus-visible{outline:2px solid var(--cyan)}
+.taf td{padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top;background:var(--surface)}
+.taf th.n,.taf td.n{text-align:right}
+.taf td.save{font-weight:700;color:var(--navy)}
+.taf tr.miss td{color:var(--muted);opacity:.7}
+.taf .why{display:block;font-size:.8rem}
+@media (max-width:780px){.taf .opt{display:none}}
+.taf .method{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr));gap:20px}
+.taf .method p{font-size:.92rem;margin-top:10px}
+.taf dl{margin:16px 0 0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px 16px;font-size:.88rem}
+.taf dt{color:var(--muted)}
+.taf dd{margin:0;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.taf .sources p{font-size:.9rem;margin-top:10px}
+.taf .sources a{color:var(--navy)}
+</style>
+"""
+
+
+def build_ta_finder():
+    pg = Page(TA_FINDER_SLUG + ".html")
+    epc_opts = "".join(f'<option value="{v}">{t}</option>' for v, t in
+                       [("", "Any rating"), ("B", "B or better"), ("C", "C or better"), ("D", "D or better"), ("E", "E or better")])
+    cols = [("n", "rank", "#"), ("", "property", "Property"), ("", "borough", "Area"), ("n", "asking_price", "Asking"),
+            ("", "epc", "EPC"), ("n opt", "lha", "LHA now /wk"), ("n opt", "nightly", "TA /night"),
+            ("n opt", "subWk", "Subsidy /wk"), ("n", "ownNet", "Net cost of owning /yr"),
+            ("n", "taNet", "Nightly-paid equivalent /yr"), ("n", "saving", "Saving /yr"), ("n opt", "breakeven", "Break-even /night")]
+    ths = "".join(f'<th class="{c}"><button type="button" data-sort="{k}">{t}</button></th>' for c, k, t in cols)
+    body = f"""{header(pg)}
+<main id="main">
+{page_hero(pg, [("Home", "")], "TA Acquisition Finder", "Find homes on the market that would cost a council less to own than the nightly-paid temporary accommodation they replace, ranked by net annual saving.", eyebrow="Preview", crumb="TA Acquisition Finder")}
+<div class="wrap taf">
+  <nav class="steps" aria-label="Pages">
+    <button type="button" data-view="search">1. Search</button>
+    <button type="button" data-view="results">2. Results</button>
+    <button type="button" data-view="method">How savings are worked out</button>
+  </nav>
+
+  <section class="page" id="search" aria-labelledby="h-search">
+    <div class="page-head"><h2 id="h-search">Set up your search</h2></div>
+    <p class="demo">Demonstration version. The properties are sample listings, not homes currently for sale. LHA rates are the actual VOA rates for each postcode, nightly TA costs are councils' 2024-25 outturn, and the PWLB rate is read live.</p>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2><span class="num-badge">1</span>Areas to search</h2><p class="note">Choose the council areas you would buy in. The number on each is how many homes there would create a saving.</p></div>
+        <div class="lnks"><button type="button" class="lnk" id="pick-all">Select every area</button><button type="button" class="lnk" id="pick-none">Clear all</button></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="area-q">Find an area</label><input type="search" id="area-q" autocomplete="off"></div>
+        <p class="note" id="sel-count"></p>
+      </div>
+      <div class="pick" id="picker"></div>
+    </div>
+
+    <div class="panel epc">
+      <h2><span class="num-badge">2</span>Energy rating</h2>
+      <p class="note">Leave out homes below this EPC rating. Homes rated D or E may need works to reach C.</p>
+      <div class="field"><label for="epc-min">Minimum EPC rating</label><select id="epc-min">{epc_opts}</select></div>
+    </div>
+
+    <div class="go">
+      <p><b id="go-n">0</b> homes in your search would create a saving, worth <b id="go-s">£0</b> a year in total.</p>
+      <button type="button" class="btn btn-brass" data-view="results">See the results</button>
+    </div>
+  </section>
+
+  <section class="page" id="results" aria-labelledby="h-results" hidden>
+    <div class="page-head">
+      <div><h2 id="h-results">Results</h2><p class="note" id="crit"></p><p class="note" id="rate-line"></p></div>
+      <button type="button" class="btn btn-civic" data-view="search">Change search</button>
+    </div>
+    <p class="take">In the areas you chose, <b id="t-n">0</b> listed homes would cost less to own than the nightly-paid temporary accommodation they replace in the same area. Buying all of them would need <b id="t-c">£0</b> of capital and save <b id="t-s">£0</b> a year.</p>
+    <div class="tiles">
+      <div class="tile"><p class="k">Homes that create a saving</p><p class="v" id="k-n">0</p><p class="s">Any price, any size</p></div>
+      <div class="tile"><p class="k">Net saving a year if all bought</p><p class="v" id="k-s">£0</p><p class="s">To the General Fund</p></div>
+      <div class="tile"><p class="k">Capital required</p><p class="v" id="k-c">£0</p><p class="s">Price, purchase costs and works</p></div>
+      <div class="tile"><p class="k">Best single home</p><p class="v" id="k-b">—</p><p class="s">Net saving a year</p></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Ranked by net annual saving</h2><p class="note">Net cost of owning is PWLB interest and MRP plus management and maintenance, less rent. The nightly-paid equivalent is a year of the placement it replaces, less Housing Benefit subsidy. The saving is the difference. Select a column heading to sort.</p></div>
+        <label class="note"><input type="checkbox" id="show-miss"> Show homes with no saving</label>
+      </div>
+      <div class="tablebox"><table><thead><tr>{ths}</tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+    <p class="note">Figures are a screening estimate. <button type="button" class="lnk" data-view="method">See how savings are worked out</button>.</p>
+  </section>
+
+  <section class="page" id="method" aria-labelledby="h-method" hidden>
+    <div class="page-head">
+      <h2 id="h-method">How savings are worked out</h2>
+      <button type="button" class="btn btn-civic" data-view="results">Back to results</button>
+    </div>
+    <div class="method">
+      <div class="panel">
+        <h2>Owning the home</h2>
+        <p>The council borrows the full cost from the PWLB on a maturity loan at the certainty rate and sets aside minimum revenue provision each year. It lets at the current LHA rate for the postcode and bedroom size, and pays management and maintenance as a share of that rent.</p>
+        <p class="note" id="rate-src"></p>
+        <dl>
+          <dt>PWLB certainty rate, <span id="a-term"></span>-year maturity</dt><dd><span id="a-pwlb"></span>%</dd>
+          <dt>Minimum revenue provision</dt><dd><span id="a-mrp"></span>% of capital a year</dd>
+          <dt>Purchase costs</dt><dd><span id="a-buy"></span>% of price</dd>
+          <dt>Management and maintenance</dt><dd><span id="a-mm"></span>% of LHA rent</dd>
+          <dt>Rent loss and voids</dt><dd><span id="a-loss"></span>%</dd>
+        </dl>
+      </div>
+      <div class="panel">
+        <h2>The placement it replaces</h2>
+        <p>The avoided cost is the area's average gross cost per household per night for nightly-paid self-contained TA in 2024-25, less Housing Benefit subsidy at a share of the January 2011 LHA rate for the property's size and area.</p>
+        <dl>
+          <dt>Subsidy</dt><dd><span id="a-sub"></span>% of Jan 2011 LHA</dd>
+          <dt>Weekly cap, inner and central London</dt><dd id="a-cap1"></dd>
+          <dt>Weekly cap, elsewhere</dt><dd id="a-cap2"></dd>
+          <dt>Nightly cost outside London (assumed)</dt><dd id="a-out"></dd>
+        </dl>
+      </div>
+      <div class="panel">
+        <h2>Which homes are shown</h2>
+        <p>Every listing whose net saving is above zero, at any price and with any number of bedrooms. The area and energy rating choices narrow this down.</p>
+        <p>This is a screening figure. A full appraisal adds HRA or General Fund treatment, repairs and void profiles, rent growth against a frozen LHA and a sensitivity range on the nightly cost. The 2024-25 nightly averages are likely to understate current prices.</p>
+      </div>
+    </div>
+    <div class="panel sources">
+      <h2>Where the data comes from</h2>
+      <p><strong>Listings:</strong> sample properties for demonstration, each at a real postcode. Asking prices, works costs, floor areas and EPC ratings are illustrative.</p>
+      <p><strong>LHA rates:</strong> 2026/27 and January 2011 weekly rates for each postcode, from the Valuation Office Agency's <a href="https://lha-direct.voa.gov.uk/search.aspx" rel="noopener">LHA Direct</a>.</p>
+      <p><strong>PWLB rate:</strong> the DMO's published standard rate for a 40-year maturity loan, refreshed each working day, less the 0.20% certainty discount.</p>
+      <p><strong>Nightly TA costs:</strong> each London borough's 2024-25 revenue outturn (RO4) spend on nightly-paid self-contained TA divided by its average households in that category (TA1), as compiled by the <a href="https://github.com/hackney-data-stories/london-ta-atlas" rel="noopener">London TA Atlas</a>. Boroughs whose returns can't isolate nightly-paid costs use the London average of £94.</p>
+      <p><strong>Subsidy rules:</strong> Local Government Association, <a href="https://www.local.gov.uk/publications/local-housing-allowance-rate-and-temporary-accomodation-reimbursement-process" rel="noopener">the LHA rate and temporary accommodation reimbursement process</a>.</p>
+      <p class="note">Contains public sector information licensed under the Open Government Licence v3.0. Figures are illustrative screening estimates, not financial advice.</p>
+    </div>
+  </section>
+</div>
+{contact_band(pg, "Interested in the TA Acquisition Finder?", "We are piloting this tool with a small number of councils. Tell us how your authority would use it and what it would need to show to support your acquisitions programme.")}
+</main>
+"""
+    scripts = f'<script src="{pg.asset("js/ta-finder.js")}" defer></script>\n'
+    write(pg, head(pg, "TA Acquisition Finder",
+                   "Screens homes on the market for local authorities and ranks them by the annual saving against nightly-paid temporary accommodation.",
+                   extra=TA_FINDER_CSS, noindex=True)
+          + body + footer(pg, scripts))
+
+
 def build_sitemap():
     today = date.today().isoformat()
     urls = [("", today), ("blog", today), ("our-team", today), ("testimonials", today), ("contact", today),
@@ -1354,6 +1542,7 @@ if __name__ == "__main__":
     build_tools()
     build_pwlb_repayment()
     build_pwlb_vs_il()
+    build_ta_finder()
     build_hra_assistant()
     build_case_studies()
     build_privacy()
