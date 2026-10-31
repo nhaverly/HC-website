@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>TA Acquisition Finder</title>
+<meta name="description" content="Screens homes on the market for local authorities and ranks them by the annual saving against nightly-paid temporary accommodation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a step bar over three pages (search, results, method); one column, cards for each step */
+:root{
+  --navy:#0B1A4A;
+  --bg:#F5F6FA; --surface:#FFFFFF; --surface-2:#EEF0F6; --line:#DCE0EB;
+  --ink:#101631; --muted:#5B6382;
+  --accent:#0B1A4A; --accent-ink:#FFFFFF;
+  --good:#1E7A4F; --warn:#9A5B00;
+  --f-display:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --f-body:"IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:6px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0A0E26; --surface:#111737; --surface-2:#182047; --line:#28305E;
+    --ink:#E7EAF7; --muted:#9DA5CB;
+    --accent:#C7CEFF; --accent-ink:#0B1A4A;
+    --good:#6BCB9A; --warn:#E8B260;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.5;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+[hidden]{display:none!important}
+
+.band{background:var(--navy);color:#F1F3FB}
+.band .wrap{padding-block:22px 18px;display:grid;gap:12px}
+.title{font-family:var(--f-display);font-weight:600;font-size:clamp(24px,4vw,32px);line-height:1.15;margin:0;text-wrap:balance}
+.sub{margin:0;color:#B7BEE0;max-width:70ch}
+.steps{display:flex;flex-wrap:wrap;gap:6px}
+.steps button{border:1px solid rgba(255,255,255,.28);background:transparent;color:#DDE2F7;padding:6px 14px;border-radius:999px;cursor:pointer;font-size:13px}
+.steps button[aria-current="page"]{background:#F1F3FB;color:var(--navy);border-color:#F1F3FB;font-weight:600}
+
+main .wrap{padding-block:24px 48px;display:grid;gap:20px}
+.page{display:grid;gap:18px}
+.banner{margin:0;font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r);padding:10px 12px;background:var(--surface)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:14px;min-width:0}
+.card-head{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;justify-content:space-between}
+h2{font-family:var(--f-display);font-weight:600;font-size:22px;margin:0}
+h3{font-size:16px;font-weight:600;margin:0;display:flex;align-items:center;gap:8px}
+.note{margin:0;font-size:13px;color:var(--muted);max-width:80ch}
+.stepnum{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;flex:none}
+@media (prefers-color-scheme: dark){.stepnum{background:var(--accent);color:var(--accent-ink)}}
+.lnk{background:none;border:0;padding:0;color:var(--ink);text-decoration:underline;text-underline-offset:2px;cursor:pointer;font-size:13px}
+.lnks{display:flex;flex-wrap:wrap;gap:12px}
+.row{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.field{font-size:13px;padding:7px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg);min-width:0}
+input.field{width:min(100%,18rem)}
+label.inline{display:inline-flex;gap:8px;align-items:center;font-size:14px}
+
+.pick{display:grid;gap:16px;max-height:26rem;overflow:auto;padding-right:4px}
+.grp{display:grid;gap:8px}
+.grp-head{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.grp-head strong{font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:4px 11px;border:1px solid var(--line);border-radius:999px;background:transparent;cursor:pointer;display:inline-flex;gap:6px;align-items:baseline}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip .c{font-variant-numeric:tabular-nums;opacity:.75}
+
+.go{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;padding:18px;border:2px solid var(--accent);border-radius:var(--r);background:var(--surface)}
+.go p{margin:0;font-size:16px}
+.go b,.take b{font-variant-numeric:tabular-nums}
+.primary{font-weight:600;padding:11px 22px;border-radius:var(--r);border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.secondary{font-size:13px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--line);background:var(--surface);cursor:pointer}
+
+.take{margin:0;font-size:16px;max-width:75ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:4px;align-content:start}
+.tile .k{margin:0;font-size:12.5px;color:var(--muted)}
+.tile .v{margin:0;font-family:var(--f-display);font-weight:500;font-size:28px;line-height:1.1;font-variant-numeric:tabular-nums}
+.tile .s{margin:0;font-size:12.5px;color:var(--muted)}
+
+.tablebox{overflow:auto;max-height:40rem;border:1px solid var(--line);border-radius:var(--r)}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+th{position:sticky;top:0;background:var(--surface-2);text-align:left;font-weight:600;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th button{all:unset;cursor:pointer}
+th button:focus-visible{outline:2px solid var(--accent)}
+td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top;background:var(--surface)}
+th.n,td.n{text-align:right}
+td.save{font-weight:600}
+tr.miss td{color:var(--muted)}
+.why{display:block;color:var(--warn);font-size:12px}
+@media (max-width:760px){.opt{display:none}}
+
+.method{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr));gap:14px}
+dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;font-size:13px}
+dt{color:var(--muted)} dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.method p{margin:0;font-size:13.5px}
+.sources{font-size:13px;color:var(--muted);display:grid;gap:6px}
+.sources p{margin:0}
+.sources a{color:inherit}
+footer{border-top:1px solid var(--line)}
+footer .wrap{padding-block:18px 28px;font-size:12.5px;color:var(--muted);display:grid;gap:6px}
+footer p{margin:0}
+</style>
+</head>
+<body>
+<header class="band">
+  <div class="wrap">
+    <h1 class="title">TA Acquisition Finder</h1>
+    <p class="sub">Find homes on the market that would cost a council less to own than the nightly-paid temporary accommodation they replace.</p>
+    <nav class="steps" aria-label="Pages">
+      <button type="button" data-view="search">1. Search</button>
+      <button type="button" data-view="results">2. Results</button>
+      <button type="button" data-view="method">How savings are worked out</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <section class="page" id="search" aria-labelledby="h-search">
+    <div class="card-head">
+      <h2 id="h-search">Set up your search</h2>
+    </div>
+    <p class="banner">Demonstration version. The properties are sample listings, not homes currently for sale. The LHA rates are the actual VOA rates for each postcode, and nightly TA costs are councils' 2024-25 outturn.</p>
+
+    <div class="card">
+      <div class="card-head">
+        <div><h3><span class="stepnum">1</span>Areas to search</h3><p class="note">Choose the council areas you would buy in. The number on each is how many homes there would create a saving.</p></div>
+        <div class="lnks"><button type="button" class="lnk" id="pick-all">Select every area</button><button type="button" class="lnk" id="pick-none">Clear all</button></div>
+      </div>
+      <div class="row">
+        <input type="search" id="area-q" class="field" placeholder="Find an area" aria-label="Find an area" autocomplete="off">
+        <span class="note" id="sel-count"></span>
+      </div>
+      <div class="pick" id="picker"></div>
+    </div>
+
+    <div class="card">
+      <div><h3><span class="stepnum">2</span>Energy rating</h3><p class="note">Leave out homes below this EPC rating. Homes rated D or E may need works to reach C.</p></div>
+      <label class="inline" for="epc-min">Minimum EPC rating
+        <select id="epc-min" class="field">
+          <option value="">Any rating</option>
+          <option value="B">B or better</option>
+          <option value="C">C or better</option>
+          <option value="D">D or better</option>
+          <option value="E">E or better</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="go">
+      <p><b id="go-n">0</b> homes in your search would create a saving, worth <b id="go-s">£0</b> a year in total.</p>
+      <button type="button" class="primary" data-view="results">See the results</button>
+    </div>
+  </section>
+
+  <section class="page" id="results" aria-labelledby="h-results" hidden>
+    <div class="card-head">
+      <div><h2 id="h-results">Results</h2><p class="note" id="crit"></p><p class="note" id="rate-line"></p></div>
+      <button type="button" class="secondary" data-view="search">Change search</button>
+    </div>
+    <p class="take">In the areas you chose, <b id="t-n">0</b> listed homes would cost less to own than the nightly-paid temporary accommodation they replace in the same area. Buying all of them would need <b id="t-c">£0</b> of capital and save <b id="t-s">£0</b> a year.</p>
+    <div class="tiles">
+      <div class="tile"><p class="k">Homes that create a saving</p><p class="v" id="k-n">0</p><p class="s">Any price, any size</p></div>
+      <div class="tile"><p class="k">Net saving a year if all bought</p><p class="v" id="k-s">£0</p><p class="s">To the General Fund</p></div>
+      <div class="tile"><p class="k">Capital required</p><p class="v" id="k-c">£0</p><p class="s">Price, purchase costs and works</p></div>
+      <div class="tile"><p class="k">Best single home</p><p class="v" id="k-b">—</p><p class="s">Net saving a year</p></div>
+    </div>
+    <div class="card">
+      <div class="card-head">
+        <div><h3>Ranked by net annual saving</h3><p class="note">Net cost of owning is PWLB interest and MRP plus management and maintenance, less rent. The nightly-paid equivalent is a year of the placement it replaces, less Housing Benefit subsidy. The saving is the difference. Select a column heading to sort.</p></div>
+        <label class="inline"><input type="checkbox" id="show-miss"> Show homes with no saving</label>
+      </div>
+      <div class="tablebox">
+        <table>
+          <thead><tr>
+            <th class="n"><button type="button" data-sort="rank">#</button></th>
+            <th><button type="button" data-sort="property">Property</button></th>
+            <th><button type="button" data-sort="borough">Area</button></th>
+            <th class="n"><button type="button" data-sort="asking_price">Asking</button></th>
+            <th><button type="button" data-sort="epc">EPC</button></th>
+            <th class="n opt"><button type="button" data-sort="lha">LHA now /wk</button></th>
+            <th class="n opt"><button type="button" data-sort="nightly">TA /night</button></th>
+            <th class="n opt"><button type="button" data-sort="subWk">Subsidy /wk</button></th>
+            <th class="n"><button type="button" data-sort="ownNet">Net cost of owning /yr</button></th>
+            <th class="n"><button type="button" data-sort="taNet">Nightly-paid equivalent /yr</button></th>
+            <th class="n"><button type="button" data-sort="saving">Saving /yr</button></th>
+            <th class="n opt"><button type="button" data-sort="breakeven">Break-even /night</button></th>
+          </tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="note">Figures are a screening estimate. <button type="button" class="lnk" data-view="method">See how savings are worked out</button>.</p>
+  </section>
+
+  <section class="page" id="method" aria-labelledby="h-method" hidden>
+    <div class="card-head">
+      <h2 id="h-method">How savings are worked out</h2>
+      <button type="button" class="secondary" data-view="results">Back to results</button>
+    </div>
+    <div class="method">
+      <div class="card">
+        <h3>Owning the home</h3>
+        <p>The council borrows the full cost from the PWLB on a maturity loan at the certainty rate and sets aside minimum revenue provision each year. It lets at the current LHA rate for the postcode and bedroom size, and pays management and maintenance as a share of that rent.</p>
+        <p class="note" id="rate-src"></p>
+        <dl>
+          <dt>PWLB certainty rate, <span id="a-term"></span>-year maturity</dt><dd><span id="a-pwlb"></span>%</dd>
+          <dt>Minimum revenue provision</dt><dd><span id="a-mrp"></span>% of capital a year</dd>
+          <dt>Purchase costs</dt><dd><span id="a-buy"></span>% of price</dd>
+          <dt>Management and maintenance</dt><dd><span id="a-mm"></span>% of LHA rent</dd>
+          <dt>Rent loss and voids</dt><dd><span id="a-loss"></span>%</dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3>The placement it replaces</h3>
+        <p>The avoided cost is the area's average gross cost per household per night for nightly-paid self-contained TA in 2024-25, less Housing Benefit subsidy at a share of the January 2011 LHA rate for the property's size and area.</p>
+        <dl>
+          <dt>Subsidy</dt><dd><span id="a-sub"></span>% of Jan 2011 LHA</dd>
+          <dt>Weekly cap, inner and central London</dt><dd id="a-cap1"></dd>
+          <dt>Weekly cap, elsewhere</dt><dd id="a-cap2"></dd>
+          <dt>Nightly cost outside London (assumed)</dt><dd id="a-out"></dd>
+        </dl>
+      </div>
+      <div class="card">
+        <h3>Which homes are shown</h3>
+        <p>Every listing whose net saving is above zero, at any price and with any number of bedrooms. The area and energy rating choices narrow this down.</p>
+        <p>This is a screening figure. A full appraisal adds MRP, HRA or General Fund treatment, repairs and void profiles, rent growth against a frozen LHA and a sensitivity range on the nightly cost. The 2024-25 nightly averages are likely to understate current prices.</p>
+      </div>
+    </div>
+    <div class="card sources">
+      <h3>Where the data comes from</h3>
+      <p><strong>Listings:</strong> sample properties for demonstration, each at a real postcode. Asking prices, works costs, floor areas and EPC ratings are illustrative.</p>
+      <p><strong>LHA rates:</strong> 2026/27 and January 2011 weekly rates for each postcode, from the Valuation Office Agency's <a href="https://lha-direct.voa.gov.uk/search.aspx" target="_blank" rel="noopener">LHA Direct</a>.</p>
+      <p><strong>Nightly TA costs:</strong> each London borough's 2024-25 revenue outturn (RO4) spend on nightly-paid self-contained TA divided by its average households in that category (TA1), as compiled by the <a href="https://github.com/hackney-data-stories/london-ta-atlas" target="_blank" rel="noopener">London TA Atlas</a>. Boroughs whose returns can't isolate nightly-paid costs use the London average of £94.</p>
+      <p><strong>Subsidy rules:</strong> Local Government Association, <a href="https://www.local.gov.uk/publications/local-housing-allowance-rate-and-temporary-accomodation-reimbursement-process" target="_blank" rel="noopener">the LHA rate and temporary accommodation reimbursement process</a>.</p>
+    </div>
+  </section>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Contains public sector information licensed under the Open Government Licence v3.0.</p>
+    <p>Figures are illustrative screening estimates, not financial advice.</p>
+  </div>
+</footer>
+
+<script>
+const LISTINGS=[{"listing_id":"L01","borough":"Luton","region":"Outside London","postcode":"LU2 0FU","brma":"Luton","property_type":"Terraced house","beds":2,"asking_price":235000,"works_cost":8000,"floor_area_sqm":68,"epc":"D","days_listed":1,"lha_2026_weekly":201.37,"lha_jan2011_weekly":138.46},{"listing_id":"L02","borough":"Harlow","region":"Outside London","postcode":"CM20 2UE","brma":"Harlow & Stortford","property_type":"Flat","beds":2,"asking_price":215000,"works_cost":4000,"floor_area_sqm":62,"epc":"C","days_listed":0,"lha_2026_weekly":235.89,"lha_jan2011_weekly":161.54},{"listing_id":"L03","borough":"Dartford","region":"Outside London","postcode":"DA1 1QT","brma":"North West Kent","property_type":"Semi-detached house","beds":3,"asking_price":365000,"works_cost":12000,"floor_area_sqm":88,"epc":"D","days_listed":3,"lha_2026_weekly":276.16,"lha_jan2011_weekly":173.08},{"listing_id":"L04","borough":"Croydon","region":"Outer London","postcode":"CR0 6DX","brma":"Outer South London","property_type":"Flat","beds":1,"asking_price":230000,"works_cost":3000,"floor_area_sqm":46,"epc":"C","days_listed":2,"lha_2026_weekly":218.63,"lha_jan2011_weekly":155.77},{"listing_id":"L05","borough":"Basildon","region":"Outside London","postcode":"SS14 2PE","brma":"South West Essex","property_type":"Terraced house","beds":3,"asking_price":320000,"works_cost":15000,"floor_area_sqm":82,"epc":"E","days_listed":1,"lha_2026_weekly":276.16,"lha_jan2011_weekly":196.15},{"listing_id":"L06","borough":"Slough","region":"Outside London","postcode":"SL1 0HZ","brma":"East Thames Valley","property_type":"Flat","beds":2,"asking_price":240000,"works_cost":5000,"floor_area_sqm":64,"epc":"C","days_listed":6,"lha_2026_weekly":276.16,"lha_jan2011_weekly":196.15},{"listing_id":"L07","borough":"Enfield","region":"Outer London","postcode":"EN3 4JY","brma":"Outer North London","property_type":"Terraced house","beds":3,"asking_price":450000,"works_cost":18000,"floor_area_sqm":90,"epc":"D","days_listed":2,"lha_2026_weekly":390.08,"lha_jan2011_weekly":300},{"listing_id":"L08","borough":"Reading","region":"Outside London","postcode":"RG1 7ED","brma":"Reading","property_type":"Terraced house","beds":4,"asking_price":420000,"works_cost":25000,"floor_area_sqm":108,"epc":"E","days_listed":0,"lha_2026_weekly":380.65,"lha_jan2011_weekly":300},{"listing_id":"L09","borough":"Portsmouth","region":"Outside London","postcode":"PO4 8JN","brma":"Portsmouth","property_type":"Terraced house","beds":4,"asking_price":285000,"works_cost":20000,"floor_area_sqm":96,"epc":"D","days_listed":4,"lha_2026_weekly":299.18,"lha_jan2011_weekly":249.23},{"listing_id":"L10","borough":"Gosport","region":"Outside London","postcode":"PO12 2RW","brma":"Portsmouth","property_type":"Terraced house","beds":2,"asking_price":185000,"works_cost":9000,"floor_area_sqm":66,"epc":"D","days_listed":1,"lha_2026_weekly":194.47,"lha_jan2011_weekly":144.23},{"listing_id":"L11","borough":"Barking and Dagenham","region":"Outer London","postcode":"IG11 9SH","brma":"Outer North East London","property_type":"Flat","beds":2,"asking_price":295000,"works_cost":4000,"floor_area_sqm":63,"epc":"B","days_listed":5,"lha_2026_weekly":287.67,"lha_jan2011_weekly":196.15},{"listing_id":"L12","borough":"Southend","region":"Outside London","postcode":"SS2 5GE","brma":"Southend","property_type":"Terraced house","beds":3,"asking_price":330000,"works_cost":10000,"floor_area_sqm":84,"epc":"D","days_listed":0,"lha_2026_weekly":253.15,"lha_jan2011_weekly":189.23},{"listing_id":"L13","borough":"Chatham","region":"Outside London","postcode":"ME4 6QT","brma":"Medway & Swale","property_type":"Terraced house","beds":3,"asking_price":275000,"works_cost":14000,"floor_area_sqm":80,"epc":"E","days_listed":2,"lha_2026_weekly":216.33,"lha_jan2011_weekly":155.77},{"listing_id":"L14","borough":"Stevenage","region":"Outside London","postcode":"SG1 5SB","brma":"Stevenage & North Herts","property_type":"Flat","beds":2,"asking_price":245000,"works_cost":3000,"floor_area_sqm":61,"epc":"C","days_listed":7,"lha_2026_weekly":224.38,"lha_jan2011_weekly":150},{"listing_id":"L15","borough":"Guildford","region":"Outside London","postcode":"GU1 3JD","brma":"Guildford","property_type":"Semi-detached house","beds":3,"asking_price":480000,"works_cost":8000,"floor_area_sqm":92,"epc":"C","days_listed":3,"lha_2026_weekly":340.6,"lha_jan2011_weekly":276.92},{"listing_id":"L16","borough":"Sittingbourne","region":"Outside London","postcode":"ME10 1BP","brma":"Medway & Swale","property_type":"Terraced house","beds":3,"asking_price":300000,"works_cost":11000,"floor_area_sqm":83,"epc":"D","days_listed":1,"lha_2026_weekly":216.33,"lha_jan2011_weekly":155.77},{"listing_id":"L17","borough":"Watford","region":"Outside London","postcode":"WD24 5HU","brma":"South West Herts","property_type":"Flat","beds":1,"asking_price":210000,"works_cost":2000,"floor_area_sqm":44,"epc":"C","days_listed":0,"lha_2026_weekly":218.63,"lha_jan2011_weekly":150},{"listing_id":"L18","borough":"Luton","region":"Outside London","postcode":"LU4 0RS","brma":"Luton","property_type":"Semi-detached house","beds":4,"asking_price":340000,"works_cost":16000,"floor_area_sqm":104,"epc":"D","days_listed":2,"lha_2026_weekly":310.68,"lha_jan2011_weekly":207.69},{"listing_id":"B01","borough":"Camden","region":"Inner London","postcode":"NW5 1UE","brma":"Inner North London","property_type":"Flat","beds":2,"asking_price":725000,"works_cost":3000,"floor_area_sqm":64,"epc":"C","days_listed":0,"lha_2026_weekly":412.86,"lha_jan2011_weekly":340},{"listing_id":"B02","borough":"City of London","region":"Inner London","postcode":"EC2Y 5AG","brma":"Central London","property_type":"Flat","beds":1,"asking_price":620000,"works_cost":5000,"floor_area_sqm":45,"epc":"D","days_listed":1,"lha_2026_weekly":331.39,"lha_jan2011_weekly":370},{"listing_id":"B03","borough":"Hackney","region":"Inner London","postcode":"E5 8QE","brma":"Inner East London","property_type":"Flat","beds":2,"asking_price":520000,"works_cost":8000,"floor_area_sqm":64,"epc":"C","days_listed":2,"lha_2026_weekly":402.74,"lha_jan2011_weekly":300},{"listing_id":"B04","borough":"Hammersmith and Fulham","region":"Inner London","postcode":"W12 0NS","brma":"Inner West London","property_type":"Flat","beds":2,"asking_price":560000,"works_cost":12000,"floor_area_sqm":64,"epc":"D","days_listed":3,"lha_2026_weekly":373.97,"lha_jan2011_weekly":315},{"listing_id":"B05","borough":"Haringey","region":"Inner London","postcode":"N17 0NB","brma":"Outer North London","property_type":"Terraced house","beds":3,"asking_price":575000,"works_cost":15000,"floor_area_sqm":86,"epc":"D","days_listed":4,"lha_2026_weekly":390.08,"lha_jan2011_weekly":300},{"listing_id":"B06","borough":"Islington","region":"Inner London","postcode":"N19 4HG","brma":"Inner North London","property_type":"Flat","beds":2,"asking_price":600000,"works_cost":3000,"floor_area_sqm":64,"epc":"C","days_listed":0,"lha_2026_weekly":412.86,"lha_jan2011_weekly":340},{"listing_id":"B07","borough":"Kensington and Chelsea","region":"Inner London","postcode":"W10 6BY","brma":"Inner North London","property_type":"Flat","beds":2,"asking_price":700000,"works_cost":5000,"floor_area_sqm":64,"epc":"B","days_listed":1,"lha_2026_weekly":412.86,"lha_jan2011_weekly":340},{"listing_id":"B08","borough":"Lambeth","region":"Inner London","postcode":"SW16 3DU","brma":"Inner South East London","property_type":"Flat","beds":2,"asking_price":430000,"works_cost":8000,"floor_area_sqm":64,"epc":"D","days_listed":2,"lha_2026_weekly":356.71,"lha_jan2011_weekly":253.85},{"listing_id":"B09","borough":"Lewisham","region":"Inner London","postcode":"SE6 1SS","brma":"Inner South East London","property_type":"Terraced house","beds":3,"asking_price":480000,"works_cost":20000,"floor_area_sqm":86,"epc":"C","days_listed":3,"lha_2026_weekly":448.77,"lha_jan2011_weekly":300},{"listing_id":"B10","borough":"Newham","region":"Inner London","postcode":"E13 8QT","brma":"Outer East London","property_type":"Terraced house","beds":3,"asking_price":440000,"works_cost":10000,"floor_area_sqm":86,"epc":"D","days_listed":4,"lha_2026_weekly":385.48,"lha_jan2011_weekly":255},{"listing_id":"B11","borough":"Southwark","region":"Inner London","postcode":"SE15 6QT","brma":"Inner South East London","property_type":"Flat","beds":2,"asking_price":475000,"works_cost":3000,"floor_area_sqm":64,"epc":"E","days_listed":0,"lha_2026_weekly":356.71,"lha_jan2011_weekly":253.85},{"listing_id":"B12","borough":"Tower Hamlets","region":"Inner London","postcode":"E3 4DH","brma":"Inner East London","property_type":"Flat","beds":2,"asking_price":470000,"works_cost":5000,"floor_area_sqm":64,"epc":"C","days_listed":1,"lha_2026_weekly":402.74,"lha_jan2011_weekly":300},{"listing_id":"B13","borough":"Wandsworth","region":"Inner London","postcode":"SW17 9HN","brma":"Inner South West London","property_type":"Flat","beds":2,"asking_price":520000,"works_cost":8000,"floor_area_sqm":64,"epc":"C","days_listed":2,"lha_2026_weekly":391.23,"lha_jan2011_weekly":311.54},{"listing_id":"B14","borough":"Westminster","region":"Inner London","postcode":"W9 1PS","brma":"Central London","property_type":"Flat","beds":1,"asking_price":550000,"works_cost":12000,"floor_area_sqm":45,"epc":"D","days_listed":3,"lha_2026_weekly":331.39,"lha_jan2011_weekly":370},{"listing_id":"B15","borough":"Barnet","region":"Outer London","postcode":"N11 3HY","brma":"Outer North London","property_type":"Flat","beds":2,"asking_price":400000,"works_cost":15000,"floor_area_sqm":64,"epc":"C","days_listed":4,"lha_2026_weekly":322.19,"lha_jan2011_weekly":231},{"listing_id":"B16","borough":"Bexley","region":"Outer London","postcode":"DA17 5QX","brma":"Outer South East London","property_type":"Terraced house","beds":3,"asking_price":390000,"works_cost":10000,"floor_area_sqm":86,"epc":"D","days_listed":0,"lha_2026_weekly":356.71,"lha_jan2011_weekly":229.62},{"listing_id":"B17","borough":"Brent","region":"Outer London","postcode":"NW10 9NS","brma":"Inner North London","property_type":"Flat","beds":2,"asking_price":420000,"works_cost":5000,"floor_area_sqm":64,"epc":"D","days_listed":1,"lha_2026_weekly":412.86,"lha_jan2011_weekly":340},{"listing_id":"B18","borough":"Bromley","region":"Outer London","postcode":"SE20 8JS","brma":"Outer South East London","property_type":"Flat","beds":2,"asking_price":340000,"works_cost":8000,"floor_area_sqm":64,"epc":"C","days_listed":2,"lha_2026_weekly":299.18,"lha_jan2011_weekly":190.38},{"listing_id":"B19","borough":"Ealing","region":"Outer London","postcode":"UB2 4HW","brma":"Outer West London","property_type":"Terraced house","beds":3,"asking_price":480000,"works_cost":10000,"floor_area_sqm":86,"epc":"B","days_listed":3,"lha_2026_weekly":339.45,"lha_jan2011_weekly":253.85},{"listing_id":"B20","borough":"Greenwich","region":"Outer London","postcode":"SE2 9HJ","brma":"Outer South East London","property_type":"Terraced house","beds":3,"asking_price":420000,"works_cost":15000,"floor_area_sqm":86,"epc":"D","days_listed":4,"lha_2026_weekly":356.71,"lha_jan2011_weekly":229.62},{"listing_id":"B21","borough":"Harrow","region":"Outer London","postcode":"HA3 7PN","brma":"North West London","property_type":"Flat","beds":2,"asking_price":360000,"works_cost":3000,"floor_area_sqm":64,"epc":"C","days_listed":0,"lha_2026_weekly":310.68,"lha_jan2011_weekly":219.23},{"listing_id":"B22","borough":"Havering","region":"Outer London","postcode":"RM3 9EL","brma":"Outer North East London","property_type":"Terraced house","beds":3,"asking_price":385000,"works_cost":10000,"floor_area_sqm":86,"epc":"D","days_listed":1,"lha_2026_weekly":345.21,"lha_jan2011_weekly":242.31},{"listing_id":"B23","borough":"Hillingdon","region":"Outer London","postcode":"UB3 2BY","brma":"Outer West London","property_type":"Terraced house","beds":3,"asking_price":430000,"works_cost":15000,"floor_area_sqm":86,"epc":"E","days_listed":2,"lha_2026_weekly":339.45,"lha_jan2011_weekly":253.85},{"listing_id":"B24","borough":"Hounslow","region":"Outer London","postcode":"TW4 6LT","brma":"Outer West London","property_type":"Terraced house","beds":3,"asking_price":445000,"works_cost":20000,"floor_area_sqm":86,"epc":"C","days_listed":3,"lha_2026_weekly":339.45,"lha_jan2011_weekly":253.85},{"listing_id":"B25","borough":"Kingston upon Thames","region":"Outer London","postcode":"KT6 4AP","brma":"Outer South West London","property_type":"Flat","beds":2,"asking_price":380000,"works_cost":15000,"floor_area_sqm":64,"epc":"C","days_listed":4,"lha_2026_weekly":344.05,"lha_jan2011_weekly":253.85},{"listing_id":"B26","borough":"Merton","region":"Outer London","postcode":"CR4 3HG","brma":"Outer South London","property_type":"Terraced house","beds":3,"asking_price":450000,"works_cost":15000,"floor_area_sqm":86,"epc":"D","days_listed":0,"lha_2026_weekly":345.21,"lha_jan2011_weekly":242.31},{"listing_id":"B27","borough":"Redbridge","region":"Outer London","postcode":"IG3 8AX","brma":"Outer North East London","property_type":"Terraced house","beds":3,"asking_price":455000,"works_cost":20000,"floor_area_sqm":86,"epc":"C","days_listed":1,"lha_2026_weekly":345.21,"lha_jan2011_weekly":242.31},{"listing_id":"B28","borough":"Richmond upon Thames","region":"Outer London","postcode":"TW2 7NJ","brma":"Outer West London","property_type":"Flat","beds":2,"asking_price":430000,"works_cost":8000,"floor_area_sqm":64,"epc":"D","days_listed":2,"lha_2026_weekly":299.18,"lha_jan2011_weekly":207.69},{"listing_id":"B29","borough":"Sutton","region":"Outer London","postcode":"SM1 1NR","brma":"Outer South London","property_type":"Flat","beds":2,"asking_price":315000,"works_cost":12000,"floor_area_sqm":64,"epc":"D","days_listed":3,"lha_2026_weekly":276.16,"lha_jan2011_weekly":196.15},{"listing_id":"B30","borough":"Waltham Forest","region":"Outer London","postcode":"E17 8JH","brma":"Outer East London","property_type":"Flat","beds":2,"asking_price":420000,"works_cost":15000,"floor_area_sqm":64,"epc":"C","days_listed":4,"lha_2026_weekly":322.19,"lha_jan2011_weekly":207.69}];
+const NIGHTLY=[{"borough":"Barking and Dagenham","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Barnet","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Bexley","cost_per_night":91,"basis":"Borough's own figure"},{"borough":"Brent","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Bromley","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Camden","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"City of London","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Croydon","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Ealing","cost_per_night":109,"basis":"Borough's own figure"},{"borough":"Enfield","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Greenwich","cost_per_night":75,"basis":"Borough's own figure"},{"borough":"Hackney","cost_per_night":82,"basis":"Borough's own figure"},{"borough":"Hammersmith and Fulham","cost_per_night":147,"basis":"Borough's own figure"},{"borough":"Haringey","cost_per_night":69,"basis":"Borough's own figure"},{"borough":"Harrow","cost_per_night":88,"basis":"Borough's own figure"},{"borough":"Havering","cost_per_night":113,"basis":"Borough's own figure"},{"borough":"Hillingdon","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Hounslow","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Islington","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Kensington and Chelsea","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Kingston upon Thames","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Lambeth","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Lewisham","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Merton","cost_per_night":104,"basis":"Borough's own figure"},{"borough":"Newham","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Redbridge","cost_per_night":86,"basis":"Borough's own figure"},{"borough":"Richmond upon Thames","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Southwark","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Sutton","cost_per_night":84,"basis":"Borough's own figure"},{"borough":"Tower Hamlets","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Waltham Forest","cost_per_night":123,"basis":"Borough's own figure"},{"borough":"Wandsworth","cost_per_night":94,"basis":"London average (borough's returns don't isolate nightly-paid)"},{"borough":"Westminster","cost_per_night":132,"basis":"Borough's own figure"}];
+const ASSUMPTIONS={"pwlb_term_years": 40, "pwlb_certainty_discount_pct": 0.2, "pwlb_fallback_rate_pct": 6.38, "pwlb_fallback_as_of": "2026-10-30", "mrp_pct": 2.5, "purchase_costs_pct": 6, "mm_pct_of_lha_rent": 30, "rent_loss_pct": 5, "subsidy_pct_of_2011_lha": 90, "subsidy_cap_inner_london": 500, "subsidy_cap_elsewhere": 375, "nightly_cost_outside_london": 75, "min_annual_saving": 0};
+
+
+// ---------- Appraisal ----------
+const CAP500 = new Set(['Central London','Inner East London','Inner North London','Inner South East London','Inner South West London','Inner West London']);
+function appraise(l, a, cost, ratePct){
+  const capital = l.asking_price*(1+a.purchase_costs_pct/100) + l.works_cost;
+  const financing = capital*(ratePct + a.mrp_pct)/100;
+  const rentGross = l.lha_2026_weekly*52;
+  const ownNet = financing + rentGross*a.mm_pct_of_lha_rent/100 - rentGross*(1-a.rent_loss_pct/100);
+  const c = cost[l.borough];
+  const nightly = c ? c.cost_per_night : a.nightly_cost_outside_london;
+  const subWk = Math.min(l.lha_jan2011_weekly*a.subsidy_pct_of_2011_lha/100, CAP500.has(l.brma) ? a.subsidy_cap_inner_london : a.subsidy_cap_elsewhere);
+  const saving = nightly*365 - subWk*52 - ownNet;
+  return {
+    id:l.listing_id, property:l.beds+' bed '+l.property_type.toLowerCase()+', '+l.postcode, borough:l.borough, region:l.region,
+    asking_price:l.asking_price, epc:l.epc, lha:l.lha_2026_weekly, nightly, subWk,
+    capital:Math.round(capital), ownNet:Math.round(ownNet), taNet:Math.round(nightly*365 - subWk*52), saving:Math.round(saving), breakeven:Math.round((ownNet+subWk*52)/365),
+    meets: saving > a.min_annual_saving,
+  };
+}
+const COST = Object.fromEntries(NIGHTLY.map(r => [r.borough, r]));
+// ---------- PWLB certainty rate, read live from the daily rates file ----------
+const RATES_URL = 'https://gist.githubusercontent.com/nhaverly/2221652235336db07f5df927d45ffad5/raw/rates.json';
+const PWLB = { rate: ASSUMPTIONS.pwlb_fallback_rate_pct, asOf: ASSUMPTIONS.pwlb_fallback_as_of, live: false };
+let ALL = [];
+function appraiseAll(){
+  ALL = LISTINGS.map(l => appraise(l, ASSUMPTIONS, COST, PWLB.rate)).sort((x,y) => y.saving-x.saving);
+  let k = 0; ALL.forEach(x => { x.rank = x.meets ? ++k : null; });
+}
+appraiseAll();
+async function loadRate(){
+  try {
+    const r = await fetch(RATES_URL + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    const curve = Array.isArray(j.pwlbMaturityCurve) ? j.pwlbMaturityCurve : [];
+    const pt = curve.reduce((best, p) => (!best || Math.abs(p.term - ASSUMPTIONS.pwlb_term_years) < Math.abs(best.term - ASSUMPTIONS.pwlb_term_years) ? p : best), null);
+    const std = pt && Number(pt.rate);
+    if (!(std > 0 && std < 0.2)) throw new Error('No usable maturity rate');
+    PWLB.rate = Math.round((std*100 - ASSUMPTIONS.pwlb_certainty_discount_pct)*100)/100;
+    PWLB.asOf = j.asOf || PWLB.asOf; PWLB.live = true;
+  } catch (e) { PWLB.live = false; }
+  appraiseAll(); renderRate(); update();
+}
+const AREAS = [...new Map(LISTINGS.map(x => [x.borough, x.region])).entries()]
+  .map(([borough, region]) => ({borough, region}))
+  .sort((p,q) => ['Inner London','Outer London','Outside London'].indexOf(p.region)-['Inner London','Outer London','Outside London'].indexOf(q.region) || p.borough.localeCompare(q.borough));
+
+// ---------- State ----------
+const state = { chosen: new Set(AREAS.map(a => a.borough)), epc:'', misses:false, q:'', sort:{key:'saving', dir:-1}, view:'search' };
+try {
+  const s = JSON.parse(localStorage.getItem('ta-finder') || 'null');
+  if (s && Array.isArray(s.chosen)) { state.chosen = new Set(s.chosen.filter(b => AREAS.some(a => a.borough === b))); state.epc = s.epc || ''; }
+} catch (e) {}
+const save = () => { try { localStorage.setItem('ta-finder', JSON.stringify({chosen:[...state.chosen], epc:state.epc})); } catch (e) {} };
+
+// ---------- Helpers ----------
+const fmtInt = v => Math.round(v).toLocaleString('en-GB');
+const gbp = v => (v < 0 ? '−£' : '£') + Math.round(Math.abs(v)).toLocaleString('en-GB');
+const gbp2 = v => '£' + v.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2});
+const gbpm = v => '£' + (v/1e6).toFixed(1) + 'm';
+const $ = id => document.getElementById(id);
+const epcOk = x => !state.epc || (x.epc && x.epc <= state.epc);
+const inSearch = () => ALL.filter(x => state.chosen.has(x.borough) && epcOk(x));
+const el = (tag, props, ...kids) => { const e = document.createElement(tag); Object.assign(e, props || {}); kids.forEach(c => e.append(c)); return e; };
+
+// ---------- Search page ----------
+function renderPicker(){
+  const box = $('picker'); box.replaceChildren();
+  const q = state.q;
+  let shown = 0;
+  ['Inner London','Outer London','Outside London'].forEach(region => {
+    const areas = AREAS.filter(a => a.region === region);
+    const list = areas.filter(a => !q || a.borough.toLowerCase().includes(q));
+    if (!list.length) return;
+    shown += list.length;
+    const names = areas.map(a => a.borough);
+    const on = names.filter(b => state.chosen.has(b)).length;
+    const allBtn = el('button', {type:'button', className:'lnk', textContent:'Select all'});
+    allBtn.onclick = () => { names.forEach(b => state.chosen.add(b)); update(); };
+    const noneBtn = el('button', {type:'button', className:'lnk', textContent:'Clear'});
+    noneBtn.onclick = () => { names.forEach(b => state.chosen.delete(b)); update(); };
+    const head = el('div', {className:'grp-head'}, el('strong', {textContent:region}), el('span', {className:'note', textContent:on+' of '+areas.length+' chosen'}), allBtn, noneBtn);
+    const chips = el('div', {className:'chips'});
+    list.forEach(a => {
+      const n = ALL.filter(x => x.borough === a.borough && x.meets && epcOk(x)).length;
+      const b = el('button', {type:'button', className:'chip'}, el('span', {textContent:a.borough}), el('span', {className:'c', textContent:String(n)}));
+      b.setAttribute('aria-pressed', String(state.chosen.has(a.borough)));
+      b.onclick = () => { state.chosen.has(a.borough) ? state.chosen.delete(a.borough) : state.chosen.add(a.borough); update(); };
+      chips.append(b);
+    });
+    box.append(el('div', {className:'grp'}, head, chips));
+  });
+  if (!shown) box.append(el('p', {className:'note', textContent:'No area matches that search.'}));
+  const n = state.chosen.size;
+  $('sel-count').textContent = n === AREAS.length ? 'All '+AREAS.length+' areas chosen' : n === 0 ? 'No areas chosen' : n+' of '+AREAS.length+' areas chosen';
+}
+
+// ---------- Results page ----------
+function renderTotals(){
+  const m = inSearch().filter(x => x.meets);
+  const n = m.length, s = m.reduce((t,x) => t+x.saving, 0), c = m.reduce((t,x) => t+x.capital, 0);
+  const best = n ? Math.max(...m.map(x => x.saving)) : null;
+  $('go-n').textContent = fmtInt(n); $('go-s').textContent = gbp(s);
+  $('t-n').textContent = fmtInt(n); $('t-c').textContent = gbpm(c); $('t-s').textContent = gbp(s);
+  $('k-n').textContent = fmtInt(n); $('k-s').textContent = gbp(s); $('k-c').textContent = gbpm(c); $('k-b').textContent = best == null ? '—' : gbp(best);
+  const nAreas = state.chosen.size;
+  $('crit').textContent = (nAreas === AREAS.length ? 'All '+AREAS.length+' areas' : nAreas+' of '+AREAS.length+' areas') + ' · ' + (state.epc ? 'EPC '+state.epc+' or better' : 'Any EPC rating') + ' · Any price and size';
+}
+function renderTable(){
+  const tb = $('rows'); tb.replaceChildren();
+  let rows = inSearch(); if (!state.misses) rows = rows.filter(x => x.meets);
+  const {key, dir} = state.sort;
+  rows = rows.slice().sort((a,b) => {
+    const va = a[key], vb = b[key];
+    if (va == null && vb == null) return 0; if (va == null) return 1; if (vb == null) return -1;
+    return (typeof va === 'string' ? va.localeCompare(vb) : va - vb) * dir;
+  });
+  if (!rows.length) { const td = el('td', {colSpan:12, className:'note', textContent:'No homes in the chosen areas create a saving.'}); tb.append(el('tr', {}, td)); return; }
+  rows.forEach(x => {
+    const tr = el('tr', {className: x.meets ? '' : 'miss'});
+    const td = (t, c) => tr.append(el('td', {className:c||'', textContent:t}));
+    td(x.rank == null ? '–' : String(x.rank), 'n');
+    const p = el('td', {textContent:x.property}); if (!x.meets) p.append(el('span', {className:'why', textContent:'Costs more than nightly-paid TA'})); tr.append(p);
+    td(x.borough); td(gbp(x.asking_price), 'n'); td(x.epc || '–');
+    td(gbp2(x.lha), 'n opt'); td(gbp(x.nightly), 'n opt'); td(gbp2(x.subWk), 'n opt');
+    td(gbp(x.ownNet), 'n'); td(gbp(x.taNet), 'n');
+    td(gbp(x.saving), 'n save'); td(gbp(x.breakeven), 'n opt');
+    tb.append(tr);
+  });
+  document.querySelectorAll('th button[data-sort]').forEach(b => {
+    const th = b.parentElement;
+    if (b.dataset.sort === key) th.setAttribute('aria-sort', dir < 0 ? 'descending' : 'ascending'); else th.removeAttribute('aria-sort');
+  });
+}
+
+// ---------- Pages ----------
+const VIEWS = ['search','results','method'];
+function show(v){
+  state.view = VIEWS.includes(v) ? v : 'search';
+  document.querySelectorAll('.page').forEach(p => p.hidden = p.id !== state.view);
+  document.querySelectorAll('.steps [data-view]').forEach(b => b.dataset.view === state.view ? b.setAttribute('aria-current','page') : b.removeAttribute('aria-current'));
+}
+document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => {
+  if (location.hash.slice(1) !== b.dataset.view) location.hash = b.dataset.view; else show(b.dataset.view);
+  window.scrollTo({top:0});
+}));
+window.addEventListener('hashchange', () => show(location.hash.slice(1)));
+
+// ---------- Controls ----------
+$('pick-all').onclick = () => { AREAS.forEach(a => state.chosen.add(a.borough)); update(); };
+$('pick-none').onclick = () => { state.chosen.clear(); update(); };
+$('area-q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); renderPicker(); });
+$('epc-min').addEventListener('change', e => { state.epc = e.target.value; update(); });
+$('show-miss').addEventListener('change', e => { state.misses = e.target.checked; renderTable(); });
+document.querySelectorAll('th button[data-sort]').forEach(b => b.addEventListener('click', () => {
+  const key = b.dataset.sort;
+  state.sort = state.sort.key === key ? {key, dir:-state.sort.dir} : {key, dir: ['saving','ownNet','taNet','asking_price','lha','nightly','subWk','breakeven'].includes(key) ? -1 : 1};
+  renderTable();
+}));
+
+function update(){ save(); renderPicker(); renderTotals(); renderTable(); }
+
+// ---------- Method values ----------
+const A = ASSUMPTIONS;
+$('a-term').textContent = A.pwlb_term_years; $('a-mrp').textContent = A.mrp_pct;
+$('a-buy').textContent = A.purchase_costs_pct; $('a-mm').textContent = A.mm_pct_of_lha_rent; $('a-loss').textContent = A.rent_loss_pct;
+$('a-sub').textContent = A.subsidy_pct_of_2011_lha; $('a-cap1').textContent = gbp(A.subsidy_cap_inner_london);
+$('a-cap2').textContent = gbp(A.subsidy_cap_elsewhere); $('a-out').textContent = gbp(A.nightly_cost_outside_london);
+
+function renderRate(){
+  $('a-pwlb').textContent = PWLB.rate.toFixed(2);
+  const when = new Date(PWLB.asOf + 'T12:00:00').toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+  const txt = PWLB.live
+    ? 'PWLB certainty rate ' + PWLB.rate.toFixed(2) + '% (' + A.pwlb_term_years + '-year maturity, DMO rates of ' + when + ') plus MRP at ' + A.mrp_pct + '%'
+    : 'PWLB certainty rate ' + PWLB.rate.toFixed(2) + '% (' + A.pwlb_term_years + '-year maturity, DMO rates of ' + when + '; the live rate could not be loaded) plus MRP at ' + A.mrp_pct + '%';
+  $('rate-src').textContent = (PWLB.live ? 'Live rate: the standard rate the DMO published on ' : 'Live rate unavailable, so this uses the standard rate the DMO published on ') + when + ', less the ' + A.pwlb_certainty_discount_pct.toFixed(2) + '% certainty discount.';
+  $('rate-line').textContent = 'Financing: ' + txt + '.';
+}
+$('epc-min').value = state.epc;
+show(location.hash.slice(1));
+renderRate();
+update();
+loadRate();
+</script>
+</body>
+</html>
