@@ -114,6 +114,11 @@ TEAM = [
 
 # Newest first. "tag" shows as the eyebrow on the article.
 POSTS = [
+    {"slug": "right-to-buy-reform-social-housing-bill-receipts-replacement-gap",
+     "title": "Right to Buy Reform Will Slow the Sales. It Will Also Shrink the Receipts.",
+     "short": "Right to Buy reform: fewer sales, fewer receipts",
+     "date": "2026-11-03", "tag": "Social housing",
+     "desc": "The Social Housing Bill curbs Right to Buy, but its impact assessment shows replacements falling too. What it means for HRA plans and receipts."},
     {"slug": "budget-2026-small-print-190000-fewer-homes-councils",
      "title": "Budget 2026 Small Print: The OBR Now Expects 190,000 Fewer Homes",
      "short": "Budget 2026 small print: 190,000 fewer homes",
