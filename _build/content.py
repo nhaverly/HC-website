@@ -114,6 +114,10 @@ TEAM = [
 
 # Newest first. "tag" shows as the eyebrow on the article.
 POSTS = [
+    {"slug": "bank-rate-rise-council-borrowing-pwlb-hra-temporary-accommodation",
+     "title": "Bank Rate Is Rising Again. Council Borrowing Plans Need to Catch Up.",
+     "date": "2026-11-10", "tag": "Borrowing and treasury",
+     "desc": "Bank Rate is up to 4% with inflation heading for 5%. What it means for PWLB borrowing, HRA plans and temporary accommodation costs."},
     {"slug": "right-to-buy-reform-social-housing-bill-receipts-replacement-gap",
      "title": "Right to Buy Reform Will Slow the Sales. It Will Also Shrink the Receipts.",
      "short": "Right to Buy reform: fewer sales, fewer receipts",
