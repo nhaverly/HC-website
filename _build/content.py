@@ -118,7 +118,7 @@ POSTS = [
      "title": "Ten-Year TA Leases Can Cut Costs. Make Sure You Own Something at the End.",
      "short": "Ten-year TA leases: what do you own at the end?",
      "date": "2026-11-17", "tag": "Temporary accommodation",
-     "desc": "Councils are moving TA from nightly paid to ten-year leases. Why a long lease is a capital decision, and why the ownership comparison matters."},
+     "desc": "Ten-year-plus TA leases escape the 2011 subsidy cap, but they are long-term liabilities. Why the ownership comparison still matters."},
     {"slug": "bank-rate-rise-council-borrowing-pwlb-hra-temporary-accommodation",
      "title": "Bank Rate Is Rising Again. Council Borrowing Plans Need to Catch Up.",
      "date": "2026-11-10", "tag": "Borrowing and treasury",
