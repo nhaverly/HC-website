@@ -170,7 +170,7 @@ def analytics():
 
 def hra_widget(pg):
     """Site-wide HRA Assistant pop-up (inline on the assistant page)."""
-    if not SITE.get("hra_endpoint"):
+    if not SITE.get("hra_endpoint") or pg.path == "council-finance-desk.html":
         return ""
     root = pg.base or "./"
     return (f'<script src="{pg.asset("js/hra-widget.js")}" data-endpoint="{e(SITE["hra_endpoint"])}" '
@@ -529,8 +529,15 @@ def tools_html(pg, open_hra=False):
           <div><h3>HRA Assistant</h3><p>Ask questions about the Housing Revenue Account in England and get answers drawn from our HRA knowledge base, with sources.</p></div>
         </a>
         """
+    fd = ""
+    if SITE.get("finance_desk_endpoint"):
+        fd = f"""<a class="tool" href="{pg.href('council-finance-desk')}">
+          <span class="glyph">S151</span>
+          <div><h3>Council Finance Desk</h3><p>Ask about local authority finance in England, from s114 and MRP to the accounts Code and audit backstops, and get the rule, its source and a worked example.</p></div>
+        </a>
+        """
     return f"""<div class="tools">
-        {hra}<a class="tool" href="{pg.href('pwlb-premium/discount-calculator')}">
+        {fd}{hra}<a class="tool" href="{pg.href('pwlb-premium/discount-calculator')}">
           <span class="glyph">PWLB</span>
           <div><h3>Early Repayment Calculator</h3><p>Calculate the premium or discount on early repayment of PWLB debt, whether EIP, annuity or maturity.</p></div>
         </a>
@@ -862,8 +869,8 @@ def build_privacy():
     <p>We use this information only to respond to your enquiry and, if we go on to work together, to manage that relationship. Our lawful basis is our legitimate interest in responding to people who contact us, or taking steps at your request before entering into a contract.</p>
     <p>The contact form is processed by <a href="https://formspree.io">Formspree</a>, a form-handling service that forwards your details to us by email. Formspree may process this information outside the UK, under its own privacy terms and appropriate safeguards.</p>
 
-    <h3 id="hra-assistant">When you use the HRA Assistant</h3>
-    <p>Questions you type into the HRA Assistant are sent, together with the rest of that conversation, to Anthropic, the company that provides the Claude AI model, so that it can generate an answer. The service runs on Cloudflare, which passes your question to Anthropic and returns the answer.</p>
+    <h3 id="ai-assistants"><span id="hra-assistant"></span>When you use the HRA Assistant or the Council Finance Desk</h3>
+    <p>Questions you type into the HRA Assistant or the Council Finance Desk are sent, together with the rest of that conversation, to Anthropic, the company that provides the Claude AI model, so that it can generate an answer. The service runs on Cloudflare, which passes your question to Anthropic and returns the answer.</p>
     <ul>
       <li>We do not keep a record of the questions you ask or the answers you receive.</li>
       <li>Anthropic states that it automatically deletes inputs and outputs from its systems within 30 days, other than in limited circumstances such as enforcing its usage policies or meeting legal requirements.</li>
@@ -948,6 +955,46 @@ def build_hra_assistant():
                    "Free AI assistant answering questions about the Housing Revenue Account in England, drawing on Haverly Consulting's HRA knowledge base with sources cited.",
                    noindex=not SITE.get("hra_endpoint"), og_eyebrow="Free tool")
           + body + footer(pg))
+
+
+def build_finance_desk():
+    pg = Page("council-finance-desk.html")
+    widget = ""
+    if SITE.get("finance_desk_endpoint"):
+        root = pg.base or "./"
+        widget = (f'<script src="{pg.asset("js/finance-desk-widget.js")}" data-endpoint="{e(SITE["finance_desk_endpoint"])}" '
+                  f'data-site-root="{root}" defer></script>\n')
+    body = f"""{header(pg, 'tools')}
+<main id="main">
+{page_hero(pg, [("Home", ""), ("Tools", "useful-tools")], "Council finance questions, answered with the source.", "Ask about local authority finance in England and get the rule, where it comes from, what it means in practice and a worked example where numbers matter.", eyebrow="Tools", crumb="Council Finance Desk")}
+<div class="wrap layout">
+  <div data-finance-inline></div>
+  <aside class="aside">
+    <div class="via">
+      <p class="eyebrow">What it covers</p>
+      <ul>
+        <li><b>Governance and budgets</b>s151, s114 and s25, the FM Code, reserves and the MTFS</li>
+        <li><b>Funding</b>The 2026/27 multi-year settlement, council tax limits, business rates and Exceptional Financial Support</li>
+        <li><b>Capital and treasury</b>The Prudential Code, MRP, capital receipts flexibility, PWLB and treasury management</li>
+        <li><b>Accounts and audit</b>The 2026/27 Code, IFRS 16, statutory overrides, backstops and the Local Audit Office</li>
+        <li><b>Also</b>DSG, temporary accommodation, VAT, the Procurement Act, LGPS, fraud and reorganisation</li>
+        <li><b>How to use it</b>Rules checked to 13 November 2026. CIPFA codes are explained in plain English, not quoted. For detailed HRA questions, use the <a class="link" href="{pg.href('hra-assistant')}">HRA Assistant</a>.</li>
+      </ul>
+    </div>
+    <div class="cta-card">
+      <p class="eyebrow">Financial Reviews</p>
+      <h2>Want a second opinion on your council's position?</h2>
+      <p>We review MRP, debt, treasury and capital receipts policies. Some clients have saved six figures a year from MRP alone.</p>
+      <a class="btn btn-brass" href="{pg.href('financial-reviews')}">Find out more</a>
+    </div>
+  </aside>
+</div>
+</main>
+"""
+    write(pg, head(pg, "Council Finance Desk | Local Authority Finance Questions Answered",
+                   "Free AI tool answering questions on local authority finance in England: s151, MRP, capital, treasury, the accounts Code and audit, with sources cited.",
+                   noindex=not SITE.get("finance_desk_endpoint"), og_eyebrow="Free tool")
+          + body + footer(pg, scripts=widget))
 
 
 def build_pwlb_repayment():
@@ -1522,6 +1569,8 @@ def build_sitemap():
             ("case-studies", today), ("privacy", today), ("section-151-officers", today)]
     if SITE.get("hra_endpoint"):
         urls.append(("hra-assistant", today))
+    if SITE.get("finance_desk_endpoint"):
+        urls.append(("council-finance-desk", today))
     urls += [(s["slug"], today) for s in SERVICES]
     urls += [(p["slug"], p["date"]) for p in POSTS]
     body = "".join(f"<url><loc>{SITE['url']}/{u}</loc><lastmod>{d}</lastmod></url>\n" for u, d in urls)
@@ -1544,6 +1593,7 @@ if __name__ == "__main__":
     build_pwlb_vs_il()
     build_ta_finder()
     build_hra_assistant()
+    build_finance_desk()
     build_case_studies()
     build_privacy()
     build_s151()

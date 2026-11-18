@@ -21,6 +21,9 @@ SITE = {
     # does not link to the assistant and the page shows a "being set up" message.
     "cf_analytics_token": "e538d1b7121b4a5dac1aa87ba5045514",
     "hra_endpoint": "https://haverly-hra-assistant.nick-haverly.workers.dev/",
+    # Web address of the Council Finance Desk back end (Cloudflare Worker "haverly-finance-desk").
+    # While empty, the Tools page does not link to it and its page is not indexed.
+    "finance_desk_endpoint": "https://haverly-finance-desk.nick-haverly.workers.dev/",
 }
 
 SERVICES = [
